@@ -13,7 +13,7 @@ struct Trip_WeatherApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BaseView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

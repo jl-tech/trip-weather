@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19197" systemVersion="21A5304g" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
-    <entity name="Day" representedClassName="Day" syncable="YES" codeGenerationType="class">
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="day" inverseEntity="Location"/>
-        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="days" inverseEntity="Trip"/>
-    </entity>
     <entity name="Location" representedClassName="Location" syncable="YES" codeGenerationType="class">
+        <attribute name="day" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="long" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="day" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Day" inverseName="locations" inverseEntity="Day"/>
+        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="locations" inverseEntity="Trip"/>
     </entity>
     <entity name="Trip" representedClassName="Trip" syncable="YES" codeGenerationType="class">
         <attribute name="desc" optional="YES" attributeType="String"/>
@@ -17,7 +13,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="timestampAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="days" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Day" inverseName="trip" inverseEntity="Day"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="trip" inverseEntity="Location"/>
         <relationship name="tripImages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripImages" inverseName="trip" inverseEntity="TripImages"/>
     </entity>
     <entity name="TripImages" representedClassName="TripImages" syncable="YES" codeGenerationType="class">
@@ -26,8 +22,7 @@
     </entity>
     <elements>
         <element name="Trip" positionX="136" positionY="-36" width="128" height="148"/>
-        <element name="Day" positionX="139" positionY="136.5" width="128" height="88"/>
-        <element name="Location" positionX="310" positionY="121.5" width="128" height="103"/>
+        <element name="Location" positionX="128.5" positionY="198.5" width="128" height="118"/>
         <element name="TripImages" positionX="344.484375" positionY="-22" width="104.515625" height="73"/>
     </elements>
 </model>
