@@ -11,28 +11,11 @@ import CoreData
 struct TripsView: View {
     @ObservedObject var viewModel: HomeViewModel = HomeViewModel()
     
-    
     var body: some View {
         ScrollView {
             VStack {
                 ForEach(TestData.testTrips) { trip in
-                    let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-                    if (trip.images.count > 0) {
-                    }
-                    ZStack {
-                        shape
-                            .padding(.all)
-                            
-                            .foregroundColor(.blue)
-                        VStack {
-                            Text(trip.name)
-                            Text(trip.description)
-                            Text(trip.startDate.relativeTime())
-                            Text("\(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
-                        }
-                    }
-                    .frame(height: 300)
-                    
+                    tripCard(trip)
                 }
             }
         }
@@ -43,6 +26,29 @@ struct TripsView: View {
         }
     }
     
+    @ViewBuilder
+    func tripCard(_ trip: TripWeatherModel.STrip) -> some View {
+        let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+        if (trip.images.count > 0) {
+        }
+        ZStack(alignment: .bottom) {
+            shape
+                .shadow(radius: 5)
+                .foregroundColor(.blue)
+            VStack(alignment: .leading) {
+                Text(trip.name)
+                    .font(.title)
+                    .fontWeight(.bold)
+                Text(trip.startDate.relativeTime())
+                    .font(.subheadline)
+                Text("\(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
+                    .font(.caption2)
+            }
+            .padding(.all)
+        }
+        .frame(height: 300)
+        .padding(.all)
+    }
     var homeToolbar: some View {
         
         Button() {
