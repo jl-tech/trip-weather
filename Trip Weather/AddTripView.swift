@@ -72,7 +72,7 @@ struct AddTripView: View {
             } else {
                 List {
                     ForEach(Date.dates(from: trip.startDate, to: trip.endDate)) { date in
-                        DateEntry(date: date)
+                        DateEntry(locations: $trip.locations, date: date)
                     }
                 }
             }
@@ -81,11 +81,12 @@ struct AddTripView: View {
     }
     
     struct DateEntry: View {
+        @Binding var locations: [TripsViewModel.Location]
         var date: Date
         @State var currStatus = status.incomplete
         
         var body: some View {
-            NavigationLink(destination: EmptyView()) {
+            NavigationLink(destination: LocationSelectionView(locations: $locations, forDate: date, completionStatus: $currStatus)) {
                 VStack(alignment:.leading) {
                     Text(toDateString(from:date))
                     switch (currStatus) {

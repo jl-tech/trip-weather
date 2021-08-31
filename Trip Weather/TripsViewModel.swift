@@ -11,5 +11,6 @@ class TripsViewModel: ObservableObject {
     @Published var model: TripWeatherModel = TripWeatherModel()
     
     typealias Trip = TripWeatherModel.STrip
+    typealias Location = TripWeatherModel.SLocation
     // MARK: Intents
 }

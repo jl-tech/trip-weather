@@ -18,7 +18,7 @@ struct TripWeatherModel {
         var startDate: Date
         var endDate: Date
         var timestampAdded: Date
-        var locations: [Location]
+        var locations: [SLocation]
         var images: [Data]
         let id: Int
         
