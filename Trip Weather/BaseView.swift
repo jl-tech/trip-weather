@@ -21,6 +21,13 @@ struct BaseView: View {
                 Image (systemName: "airplane")
                 Text("Trips")
             }
+            NavigationView() {
+                EmptyView()
+            }
+            .tabItem {
+                Image (systemName: "gear")
+                Text("Settings")
+            }
             
         }
     }

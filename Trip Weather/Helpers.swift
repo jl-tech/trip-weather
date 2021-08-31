@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import SwiftUI
 extension Date {
     func relativeTime() -> String {
         let formatter = RelativeDateTimeFormatter()
@@ -19,7 +19,8 @@ extension Date {
 func toDateString(from date: Date) -> String {
     let formatter = DateFormatter()
     formatter.timeStyle = .none
-    formatter.dateStyle = .full
+    formatter.dateStyle = .medium
     formatter.timeZone = TimeZone.current
     return formatter.string(from: date)
 }
+

@@ -24,6 +24,15 @@ struct TestData {
         images: [],
         id: 0)
     
-    static var testTrips = [testTrip]
+    static var testTrip2 = TripWeatherModel.STrip(
+        name: "Test Trip 2!", description: "Description",
+        startDate: stringToDate("2021/12/30"),
+        endDate: stringToDate("2021/12/30"),
+        timestampAdded: Date(),
+        locations: [],
+        images: [],
+        id: 1)
+    
+    static var testTrips = [testTrip, testTrip2]
     
 }

@@ -15,8 +15,9 @@ struct TripsView: View {
         ScrollView {
             VStack {
                 ForEach(TestData.testTrips) { trip in
-                    tripCard(trip)
+                    TripCard(trip: trip)
                 }
+                NewTripCard()
             }
         }
         .toolbar {
@@ -26,29 +27,63 @@ struct TripsView: View {
         }
     }
     
-    @ViewBuilder
-    func tripCard(_ trip: TripWeatherModel.STrip) -> some View {
+    struct TripCard: View {
         let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-        if (trip.images.count > 0) {
+        var trip: TripWeatherModel.STrip
+        var body: some View {
+            Button(action: {
+
+            }) {
+                ZStack(alignment: .bottom) {
+                    shape
+                        .shadow(radius: 5)
+                        .foregroundColor(.blue)
+                    VStack(alignment: .leading) {
+                        Text(trip.name)
+                            .font(.title)
+                            .fontWeight(.bold)
+                        Text(trip.startDate.relativeTime())
+                            .font(.subheadline)
+                        Text("\(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
+                            .font(.caption2)
+                    }
+                    .padding(.all)
+                }
+                
+            }.buttonStyle(tapBounceButtonStyle())
+                .frame(height: 250)
+                .padding([.top, .leading, .trailing])
         }
-        ZStack(alignment: .bottom) {
-            shape
-                .shadow(radius: 5)
-                .foregroundColor(.blue)
-            VStack(alignment: .leading) {
-                Text(trip.name)
-                    .font(.title)
-                    .fontWeight(.bold)
-                Text(trip.startDate.relativeTime())
-                    .font(.subheadline)
-                Text("\(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
-                    .font(.caption2)
-            }
-            .padding(.all)
-        }
-        .frame(height: 300)
-        .padding(.all)
     }
+    
+    struct tapBounceButtonStyle: ButtonStyle {
+      func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.9 : 1)
+            .animation(.easeInOut(duration: 0.15))
+      }
+    }
+    
+    struct NewTripCard: View {
+        var body: some View {
+            Button(action: {
+            }) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+                        .shadow(radius: 5)
+                        .foregroundColor(.white)
+                    VStack {
+                        Image(systemName: "plus.circle")
+                        Text("Create a new trip")
+                    }
+                }
+            }
+            .frame(height: 100)
+            .padding([.top, .leading, .trailing])
+            .buttonStyle(tapBounceButtonStyle())
+        }
+    }
+    
     var homeToolbar: some View {
         
         Button() {
