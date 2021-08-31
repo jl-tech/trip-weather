@@ -13,11 +13,13 @@ struct TripsView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
+            LazyVStack {
                 ForEach(TestData.testTrips) { trip in
                     TripCard(trip: trip)
+                        .padding([.leading, .bottom, .trailing])
                 }
                 NewTripCard()
+                    .padding([.leading, .bottom, .trailing])
             }
         }
         .toolbar {
@@ -32,36 +34,44 @@ struct TripsView: View {
         var trip: TripWeatherModel.STrip
         var body: some View {
             Button(action: {
-
+                
             }) {
                 ZStack(alignment: .bottom) {
-                    shape
-                        .shadow(radius: 5)
-                        .foregroundColor(.blue)
-                    VStack(alignment: .leading) {
+                    Image("sample2")
+                        .resizable()
+                        .frame(height: 250)
+                        .aspectRatio(contentMode: .fit)
+                        
+                    VStack() {
                         Text(trip.name)
                             .font(.title)
                             .fontWeight(.bold)
-                        Text(trip.startDate.relativeTime())
+                            .padding(.top, 1.0)
+                        Text(" \(trip.startDate.relativeTime())")
                             .font(.subheadline)
-                        Text("\(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
+                        Text(" \(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
                             .font(.caption2)
+                            .padding(.bottom, 1.0)
+                        
                     }
-                    .padding(.all)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.black)
+                    .background(Blur(style: .systemUltraThinMaterialLight))
+                    .clipped()
                 }
-                
-            }.buttonStyle(tapBounceButtonStyle())
-                .frame(height: 250)
-                .padding([.top, .leading, .trailing])
+                .clipShape(shape)
+            }
         }
     }
     
+    
+    
     struct tapBounceButtonStyle: ButtonStyle {
-      func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.9 : 1)
-            .animation(.easeInOut(duration: 0.15))
-      }
+        func makeBody(configuration: Self.Configuration) -> some View {
+            configuration.label
+                .scaleEffect(configuration.isPressed ? 0.90 : 1)
+                .animation(.easeInOut(duration: 0.15))
+        }
     }
     
     struct NewTripCard: View {
@@ -70,26 +80,37 @@ struct TripsView: View {
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-                        .shadow(radius: 5)
-                        .foregroundColor(.white)
+                        .shadow(radius: 5, y: 3)
+                        .foregroundColor(.blue)
                     VStack {
                         Image(systemName: "plus.circle")
                         Text("Create a new trip")
                     }
+                    
+                    .foregroundColor(.white)
                 }
             }
             .frame(height: 100)
-            .padding([.top, .leading, .trailing])
             .buttonStyle(tapBounceButtonStyle())
+            
         }
     }
     
     var homeToolbar: some View {
-        
-        Button() {
-            // add
-        } label: {
-            Image(systemName: "plus")
+        Group {
+            
+            
+            Button() {
+                // add
+            } label: {
+                Text("Edit")
+            }
+            
+            Button() {
+                // add
+            } label: {
+                Image(systemName: "plus")
+            }
         }
     }
 }

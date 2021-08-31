@@ -11,7 +11,7 @@ import Foundation
 func stringToDate(_ date: String) -> Date{
     let dateformatter = DateFormatter()
     dateformatter.dateFormat = "yyyy/MM/dd"
-    return dateformatter.date(from: "2021/11/30")!
+    return dateformatter.date(from: date)!
 }
 
 struct TestData {
@@ -33,6 +33,14 @@ struct TestData {
         images: [],
         id: 1)
     
-    static var testTrips = [testTrip, testTrip2]
+    static var testTrip3 = TripWeatherModel.STrip(
+        name: "Test Trip 2 yes yes yes yes yes yes y", description: "Description",
+        startDate: stringToDate("2021/12/30"),
+        endDate: stringToDate("2021/12/30"),
+        timestampAdded: Date(),
+        locations: [],
+        images: [],
+        id: 2)
+    static var testTrips = [testTrip, testTrip2, testTrip3]
     
 }
