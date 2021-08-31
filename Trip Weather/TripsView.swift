@@ -9,7 +9,10 @@ import SwiftUI
 import CoreData
 
 struct TripsView: View {
-    @ObservedObject var viewModel: HomeViewModel = HomeViewModel()
+    @ObservedObject var viewModel: TripsViewModel = TripsViewModel()
+    @State private var addTripOpen = false
+    @State var tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date(), endDate: Date(), timestampAdded: Date(), locations: [], images: [], id: 0)
+    
     
     var body: some View {
         ScrollView {
@@ -18,7 +21,7 @@ struct TripsView: View {
                     TripCard(trip: trip)
                         .padding([.leading, .bottom, .trailing])
                 }
-                NewTripCard()
+                NewTripCard(addTripOpen: $addTripOpen)
                     .padding([.leading, .bottom, .trailing])
             }
         }
@@ -27,11 +30,14 @@ struct TripsView: View {
                 homeToolbar
             }
         }
+        .sheet(isPresented: $addTripOpen) {
+            AddTripView(trip: $tripToAdd)
+        }
     }
     
     struct TripCard: View {
         let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-        var trip: TripWeatherModel.STrip
+        var trip: TripsViewModel.Trip
         var body: some View {
             Button(action: {
                 
@@ -41,7 +47,6 @@ struct TripsView: View {
                         .resizable()
                         .frame(height: 250)
                         .aspectRatio(contentMode: .fit)
-                        
                     VStack() {
                         Text(trip.name)
                             .font(.title)
@@ -60,7 +65,7 @@ struct TripsView: View {
                     .clipped()
                 }
                 .clipShape(shape)
-            }
+            }.buttonStyle(tapBounceButtonStyle())
         }
     }
     
@@ -75,8 +80,10 @@ struct TripsView: View {
     }
     
     struct NewTripCard: View {
+        @Binding var addTripOpen: Bool
         var body: some View {
             Button(action: {
+                addTripOpen = true
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
@@ -92,14 +99,11 @@ struct TripsView: View {
             }
             .frame(height: 100)
             .buttonStyle(tapBounceButtonStyle())
-            
         }
     }
     
     var homeToolbar: some View {
         Group {
-            
-            
             Button() {
                 // add
             } label: {
@@ -107,7 +111,7 @@ struct TripsView: View {
             }
             
             Button() {
-                // add
+                addTripOpen = true
             } label: {
                 Image(systemName: "plus")
             }

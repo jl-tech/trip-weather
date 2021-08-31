@@ -36,3 +36,26 @@ struct Blur: UIViewRepresentable {
         uiView.effect = UIBlurEffect(style: style)
     }
 }
+
+// from https://newbedev.com/all-dates-between-two-date-objects-swift
+extension Date: Identifiable {
+    public var id: Date {
+        self
+    }
+    
+    static func dates(from fromDate: Date, to toDate: Date) -> [Date] {
+        var dates: [Date] = []
+        var date = fromDate
+        
+        while date <= toDate {
+            dates.append(date)
+            guard let newDate = Calendar.current.date(byAdding: .day, value: 1, to: date) else { break }
+            date = newDate
+        }
+        
+        if fromDate != toDate {
+            dates.append(toDate)
+        }
+        return dates
+    }
+}

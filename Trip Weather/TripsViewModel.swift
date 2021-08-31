@@ -7,8 +7,9 @@
 
 import Foundation
 
-class HomeViewModel: ObservableObject {
+class TripsViewModel: ObservableObject {
     @Published var model: TripWeatherModel = TripWeatherModel()
     
+    typealias Trip = TripWeatherModel.STrip
     // MARK: Intents
 }
