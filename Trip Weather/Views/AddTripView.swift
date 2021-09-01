@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct AddTripView: View {
-    @Binding var trip: TripsViewModel.Trip
     @Environment(\.presentationMode) var presentationMode
+    @Binding var viewModel: TripsViewModel
     
     var body: some View {
         NavigationView {
@@ -33,7 +33,6 @@ struct AddTripView: View {
         }
     }
         func dismiss() {
-            
             presentationMode.wrappedValue.dismiss()
         }
         
@@ -45,10 +44,10 @@ struct AddTripView: View {
     var basicsSection: some View {
         Group {
             Section (header: Text("Name")) {
-                TextField("Name this trip!", text: $trip.name)
+                TextField("Name this trip!", text: $viewModel.tripToAdd.name)
             }
             Section(header: Text("Description")) {
-                TextField("Give this trip a description", text: $trip.name)
+                TextField("Give this trip a description", text: $viewModel.tripToAdd.name)
             }
         }
     }
@@ -56,23 +55,23 @@ struct AddTripView: View {
     var dateSection: some View {
         Section (header: Text("Dates")) {
             DatePicker("Start Date",
-                       selection: $trip.startDate,
+                       selection: $viewModel.tripToAdd.startDate,
                        displayedComponents: [.date])
             DatePicker("End Date",
-                       selection: $trip.endDate,
+                       selection: $viewModel.tripToAdd.endDate,
                        displayedComponents: [.date])
         }
     }
     
     var locationsSection: some View {
         Section (header: Text("Locations")) {
-            if trip.endDate < trip.startDate {
+            if viewModel.tripToAdd.endDate < viewModel.tripToAdd.startDate {
                 Text("Trip end date must be on or after start date")
                     .foregroundColor(Color.gray)
             } else {
                 List {
-                    ForEach(Date.dates(from: trip.startDate, to: trip.endDate)) { date in
-                        DateEntry(locations: $trip.locations, date: date)
+                    ForEach(Date.dates(from: viewModel.tripToAdd.startDate, to: viewModel.tripToAdd.endDate)) { date in
+                        DateEntry(date: date, viewModel: $viewModel)
                     }
                 }
             }
@@ -81,12 +80,12 @@ struct AddTripView: View {
     }
     
     struct DateEntry: View {
-        @Binding var locations: [TripsViewModel.Location]
         var date: Date
         @State var currStatus = status.incomplete
+        @Binding var viewModel: TripsViewModel
         
         var body: some View {
-            NavigationLink(destination: LocationSelectionView(locations: $locations, forDate: date, completionStatus: $currStatus)) {
+            NavigationLink(destination: LocationSelectionView(forDate: date, viewModel: $viewModel, completionStatus: $currStatus)) {
                 VStack(alignment:.leading) {
                     Text(toDateString(from:date))
                     switch (currStatus) {

@@ -24,10 +24,12 @@ struct TripWeatherModel {
         
     }
     
-    struct SLocation {
+    struct SLocation: Identifiable {
         var day: Date
-        var location: String
+        var latitude: Double
+        var longitude: Double
         var name: String
+        let id: Int
     }
     
     init() {
