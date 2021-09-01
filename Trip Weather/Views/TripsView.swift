@@ -120,7 +120,7 @@ struct TripsView: View {
     }
 }
 
-private struct DrawingConstants {
+struct DrawingConstants {
     static let cornerRadius: CGFloat = 20
     static let lineWidth: CGFloat = 3
 }

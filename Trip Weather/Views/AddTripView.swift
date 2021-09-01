@@ -85,7 +85,7 @@ struct AddTripView: View {
         @EnvironmentObject var viewModel: TripsViewModel
         
         var body: some View {
-            NavigationLink(destination: LocationSelectionView(forDate: date, completionStatus: $currStatus)) {
+            NavigationLink(destination: LocationSelectionView(forDate: date)) {
                 VStack(alignment:.leading) {
                     Text(toDateString(from:date))
                     if (viewModel.locationsWithDate(date).count > 0) {

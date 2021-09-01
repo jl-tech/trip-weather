@@ -9,41 +9,81 @@ import SwiftUI
 import MapKit
 
 struct LocationSelectionView: View {
-    var forDate: Date
+    @State var forDate: Date
     @EnvironmentObject var viewModel: TripsViewModel
 
-    @Binding var completionStatus: AddTripView.DateEntry.status
     
     var body: some View {
         VStack {
+            dateSwitcher
             Form {
-                Section(header: Text("Add location"), footer: Text("Select one or more locations you will be at during \(toDateString(from: forDate))")) {
-                    NewEntryView(locationService: LocationService(), completionStatus: $completionStatus, forDate: forDate)
+                Section(header: Text("Add location"), footer: Text("Select one or more cities/towns.")) {
+                    NewEntryView(locationService: LocationService(), forDate: forDate)
                 }
-                Section(header: Text("Selected Locations")) {
+                Section(header: Text("Selected Locations"), footer: Text("Swipe a location to the left to delete it. Tap to view its map.")) {
                     if viewModel.tripToAdd.locations.count == 0 {
                         Text("No locations selected yet")
                             .foregroundColor(.gray)
                     }
                     else {
-                        List(viewModel.tripToAdd.locations) { location in
-                            if (location.day == forDate) {
-                                Text(location.name)
+                        List {
+                            ForEach(viewModel.tripToAdd.locations) { location in
+                                if (location.day == forDate) {
+                                    NavigationLink(destination: LocationMapView(location: location)) {
+                                        Text(location.name)
+                                    }
+                                }
                             }
+                            .onDelete { offsets in
+                                viewModel.tripToAdd.locations.remove(atOffsets: offsets)
+                            }
+    
+                            
                         }
+                        
                     }
                 }
                 
             }
         }.navigationTitle("Select Locations")
     }
+    
+    @ViewBuilder
+    var dateSwitcher: some View {
+        HStack {
+            Button(action: {
+
+            }) {
+                Image(systemName: "arrow.backward")
+            }
+            .disabled(!moreDatesBefore)
+            Text(toDateString(from: forDate))
+                .font(.title)
+            Button(action: {
+                
+            }) {
+                Image(systemName: "arrow.forward")
+            }
+            .disabled(!moreDatesAfter)
+        }
+        
+
+    }
+    
+    private var moreDatesBefore: Bool {
+        forDate > viewModel.tripToAdd.startDate
+    }
+    
+    private var moreDatesAfter: Bool {
+        forDate < viewModel.tripToAdd.endDate
+    }
+    
 }
 
 // Based off code by Peter Alt
 struct NewEntryView: View {
     @ObservedObject var locationService: LocationService
     @EnvironmentObject var viewModel: TripsViewModel
-    @Binding var completionStatus: AddTripView.DateEntry.status
     
     var forDate: Date
     
@@ -72,7 +112,6 @@ struct NewEntryView: View {
                     locationService.getCoordinate(addressString: name) { coords, error in
                         print(coords)
                         viewModel.addLocation(day: forDate, latitude: coords.latitude, longitude: coords.longitude, name: name)
-                        completionStatus = .finished
                     }
                     locationService.queryFragment = ""
                 } ) {
