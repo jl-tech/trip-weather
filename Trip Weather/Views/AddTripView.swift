@@ -82,21 +82,26 @@ struct AddTripView: View {
     struct DateEntry: View {
         var date: Date
         @State var currStatus = status.incomplete
+        @EnvironmentObject var viewModel: TripsViewModel
         
         var body: some View {
             NavigationLink(destination: LocationSelectionView(forDate: date, completionStatus: $currStatus)) {
                 VStack(alignment:.leading) {
                     Text(toDateString(from:date))
-                    switch (currStatus) {
-                    case .finished:
+                    if (viewModel.locationsWithDate(date).count > 0) {
                         HStack {
                         Image(systemName: "checkmark.circle")
-                        Text("Location: [LOC]")
-                            .font(.caption)
+                            if (viewModel.locationsWithDate(date).count == 1) {
+                                Text(viewModel.locationsWithDate(date)[0].name)
+                                .font(.caption)
+                            } else {
+                                Text("\(viewModel.locationsWithDate(date).count) locations")
+                                .font(.caption)
+                            }
                             
                         }
                         .foregroundColor(Color.green)
-                    case .incomplete:
+                    } else {
                         HStack {
                         Image(systemName: "exclamationmark.circle")
                         Text("Location not added yet")
@@ -104,7 +109,6 @@ struct AddTripView: View {
                             
                         }
                         .foregroundColor(Color.red)
-                        
                     }
                     
                 }

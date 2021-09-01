@@ -18,7 +18,7 @@ struct LocationSelectionView: View {
         VStack {
             Form {
                 Section(header: Text("Add location"), footer: Text("Select one or more locations you will be at during \(toDateString(from: forDate))")) {
-                    NewEntryView(locationService: LocationService(), forDate: forDate)
+                    NewEntryView(locationService: LocationService(), completionStatus: $completionStatus, forDate: forDate)
                 }
                 Section(header: Text("Selected Locations")) {
                     if viewModel.tripToAdd.locations.count == 0 {
@@ -27,7 +27,9 @@ struct LocationSelectionView: View {
                     }
                     else {
                         List(viewModel.tripToAdd.locations) { location in
-                            Text(location.name)
+                            if (location.day == forDate) {
+                                Text(location.name)
+                            }
                         }
                     }
                 }
@@ -41,7 +43,8 @@ struct LocationSelectionView: View {
 struct NewEntryView: View {
     @ObservedObject var locationService: LocationService
     @EnvironmentObject var viewModel: TripsViewModel
-
+    @Binding var completionStatus: AddTripView.DateEntry.status
+    
     var forDate: Date
     
     var body: some View {
@@ -65,8 +68,12 @@ struct NewEntryView: View {
                 // This simply lists the results, use a button in case you'd like to perform an action
                 // or use a NavigationLink to move to the next view upon selection.
                 Button(action: {
-                    var newLoc = TripsViewModel.Location(day: forDate, latitude: 0, longitude: 0 , name: completionResult.title + ", " + completionResult.subtitle, id: viewModel.tripToAdd.locations.count)
-                    viewModel.tripToAdd.locations.append(newLoc)
+                    let name = completionResult.title + ", " + completionResult.subtitle
+                    locationService.getCoordinate(addressString: name) { coords, error in
+                        print(coords)
+                        viewModel.addLocation(day: forDate, latitude: coords.latitude, longitude: coords.longitude, name: name)
+                        completionStatus = .finished
+                    }
                     locationService.queryFragment = ""
                 } ) {
                     Text(completionResult.title + ", " + completionResult.subtitle)

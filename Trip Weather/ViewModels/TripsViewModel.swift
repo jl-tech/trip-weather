@@ -15,6 +15,37 @@ class TripsViewModel: ObservableObject {
     typealias Trip = TripWeatherModel.STrip
     typealias Location = TripWeatherModel.SLocation
     
+    // MARK: Add Trip
+    func resetToAdd() {
+        tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date(), endDate: Date(), timestampAdded: Date(), locations: [], images: [], id: 0)
+    }
+    
+    func addLocation(day: Date, latitude: Double, longitude: Double, name: String) {
+        let newLoc = Location(day: day, latitude: latitude, longitude: longitude, name: name, id: tripToAdd.locations.count)
+        tripToAdd.locations.append(newLoc)
+    }
+    
+    func nLocationsWithDate(_ date: Date) -> Int {
+        var count: Int = 0
+        for item in tripToAdd.locations {
+            if item.day == date {
+                count += 1
+            }
+        }
+        return count
+    }
+    
+    func locationsWithDate(_ date: Date) -> [Location] {
+        var result: [Location] = []
+        for item in tripToAdd.locations {
+            if item.day == date {
+                result.append(item)
+            }
+        }
+        return result
+    }
+
+    
     
     // MARK: Intents
 }
