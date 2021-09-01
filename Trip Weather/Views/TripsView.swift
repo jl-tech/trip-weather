@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 struct TripsView: View {
-    @State var viewModel: TripsViewModel = TripsViewModel()
+    @ObservedObject var viewModel: TripsViewModel = TripsViewModel()
     @State private var addTripOpen = false
 
     
@@ -31,7 +31,8 @@ struct TripsView: View {
             }
         }
         .sheet(isPresented: $addTripOpen) {
-            AddTripView(viewModel: $viewModel)
+            AddTripView()
+                .environmentObject(viewModel)
         }
     }
     

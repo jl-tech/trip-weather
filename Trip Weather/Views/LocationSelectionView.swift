@@ -10,15 +10,15 @@ import MapKit
 
 struct LocationSelectionView: View {
     var forDate: Date
-    @Binding var viewModel: TripsViewModel
-    
+    @EnvironmentObject var viewModel: TripsViewModel
+
     @Binding var completionStatus: AddTripView.DateEntry.status
     
     var body: some View {
         VStack {
             Form {
                 Section(header: Text("Add location"), footer: Text("Select one or more locations you will be at during \(toDateString(from: forDate))")) {
-                    NewEntryView(viewModel: $viewModel, locationService: LocationService(), forDate: forDate)
+                    NewEntryView(locationService: LocationService(), forDate: forDate)
                 }
                 Section(header: Text("Selected Locations")) {
                     if viewModel.tripToAdd.locations.count == 0 {
@@ -39,8 +39,9 @@ struct LocationSelectionView: View {
 
 // Based off code by Peter Alt
 struct NewEntryView: View {
-    @Binding var viewModel: TripsViewModel
     @ObservedObject var locationService: LocationService
+    @EnvironmentObject var viewModel: TripsViewModel
+
     var forDate: Date
     
     var body: some View {

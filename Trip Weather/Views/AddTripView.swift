@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddTripView: View {
     @Environment(\.presentationMode) var presentationMode
-    @Binding var viewModel: TripsViewModel
+    @EnvironmentObject var viewModel: TripsViewModel
     
     var body: some View {
         NavigationView {
@@ -47,7 +47,7 @@ struct AddTripView: View {
                 TextField("Name this trip!", text: $viewModel.tripToAdd.name)
             }
             Section(header: Text("Description")) {
-                TextField("Give this trip a description", text: $viewModel.tripToAdd.name)
+                TextField("Give this trip a description", text: $viewModel.tripToAdd.description)
             }
         }
     }
@@ -71,7 +71,7 @@ struct AddTripView: View {
             } else {
                 List {
                     ForEach(Date.dates(from: viewModel.tripToAdd.startDate, to: viewModel.tripToAdd.endDate)) { date in
-                        DateEntry(date: date, viewModel: $viewModel)
+                        DateEntry(date: date)
                     }
                 }
             }
@@ -82,10 +82,9 @@ struct AddTripView: View {
     struct DateEntry: View {
         var date: Date
         @State var currStatus = status.incomplete
-        @Binding var viewModel: TripsViewModel
         
         var body: some View {
-            NavigationLink(destination: LocationSelectionView(forDate: date, viewModel: $viewModel, completionStatus: $currStatus)) {
+            NavigationLink(destination: LocationSelectionView(forDate: date, completionStatus: $currStatus)) {
                 VStack(alignment:.leading) {
                     Text(toDateString(from:date))
                     switch (currStatus) {

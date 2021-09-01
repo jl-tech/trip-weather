@@ -10,7 +10,7 @@ import SwiftUI
 
 class TripsViewModel: ObservableObject {
     @Published var model: TripWeatherModel = TripWeatherModel()
-    @State var tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date(), endDate: Date(), timestampAdded: Date(), locations: [], images: [], id: 0)
+    @Published var tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date(), endDate: Date(), timestampAdded: Date(), locations: [], images: [], id: 0)
     
     typealias Trip = TripWeatherModel.STrip
     typealias Location = TripWeatherModel.SLocation
