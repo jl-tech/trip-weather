@@ -10,13 +10,16 @@ import SwiftUI
 struct AddTripView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var viewModel: TripsViewModel
-    
+    @State private var photoSelectedOption: PhotoMode = .automatic
+    @State private var photoSelectionStatus: PhotoSelectionStatus = .unselected
+    @State private var showPhotoSheet = false
     var body: some View {
         NavigationView {
             Form {
                 basicsSection
                 dateSection
                 locationsSection
+                photoSection
                 Button(action: {}) {
                     Text("Create Trip")
                 }
@@ -54,10 +57,10 @@ struct AddTripView: View {
     
     var dateSection: some View {
         Section (header: Text("Dates")) {
-            DatePicker("Start Date",
+            DatePicker("Start date",
                        selection: $viewModel.tripToAdd.startDate,
                        displayedComponents: [.date])
-            DatePicker("End Date",
+            DatePicker("End date",
                        selection: $viewModel.tripToAdd.endDate,
                        displayedComponents: [.date])
         }
@@ -76,7 +79,51 @@ struct AddTripView: View {
                 }
             }
         }
+    }
+    
+    var photoSection: some View {
 
+        Section (header: Text("Photo"), footer: Text("'Automatic photos from the web' will display top photos of locations as your trip progresses.")) {
+            Picker(selection: $photoSelectedOption, label: EmptyView()) {
+                Text("Automatic photos from the web").tag(PhotoMode.automatic)
+                Text("Select from my photos").tag(PhotoMode.selection)
+            }
+            .pickerStyle(InlinePickerStyle())
+            if photoSelectedOption == .selection {
+                Group {
+                    Button(action: {
+                        showPhotoSheet = true
+                    }) {
+                        Text("Select photo")
+                        HStack {
+                            Image(systemName: photoSelectionStatus == .unselected ? "exclamationmark.circle" : "checkmark.circle")
+                        Text(photoSelectionStatus == .unselected ? "  No photo selected" : "  Photo selected")
+                            .font(.caption)
+                        }
+                            .foregroundColor(photoSelectionStatus == .unselected ? .red : .green)
+                    }
+                }
+                .transition(.slide)
+            }
+        }
+        .sheet(isPresented: $showPhotoSheet) {
+            PhotoLibrary(handlePickedImage: handleImage)
+        }
+    }
+    
+    private func handleImage(_ image: UIImage?) {
+        
+    }
+    
+    private enum PhotoSelectionStatus {
+        case unselected
+        case selected
+        
+    }
+    
+    private enum PhotoMode {
+        case automatic
+        case selection
     }
     
     struct DateEntry: View {

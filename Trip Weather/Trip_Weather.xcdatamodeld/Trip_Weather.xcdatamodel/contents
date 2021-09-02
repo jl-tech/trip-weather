@@ -10,19 +10,14 @@
     <entity name="Trip" representedClassName="Trip" syncable="YES" codeGenerationType="class">
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="timestampAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="trip" inverseEntity="Location"/>
-        <relationship name="tripImages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripImages" inverseName="trip" inverseEntity="TripImages"/>
-    </entity>
-    <entity name="TripImages" representedClassName="TripImages" syncable="YES" codeGenerationType="class">
-        <attribute name="imageData" optional="YES" attributeType="Binary"/>
-        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="tripImages" inverseEntity="Trip"/>
     </entity>
     <elements>
-        <element name="Trip" positionX="136" positionY="-36" width="128" height="148"/>
         <element name="Location" positionX="128.5" positionY="198.5" width="128" height="118"/>
-        <element name="TripImages" positionX="344.484375" positionY="-22" width="104.515625" height="73"/>
+        <element name="Trip" positionX="136" positionY="-36" width="128" height="148"/>
     </elements>
 </model>

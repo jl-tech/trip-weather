@@ -22,6 +22,7 @@
 		08A6435126DE6CD900404FFE /* LocationSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A6435026DE6CD900404FFE /* LocationSelectionView.swift */; };
 		08E04AFF26DF1F2100461D4D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04AFE26DF1F2100461D4D /* LocationService.swift */; };
 		08E04B0226DF4B7300461D4D /* LocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04B0126DF4B7300461D4D /* LocationMapView.swift */; };
+		08E04B0526E07EB500461D4D /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04B0426E07EB500461D4D /* PhotoLibrary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		08A6435026DE6CD900404FFE /* LocationSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSelectionView.swift; sourceTree = "<group>"; };
 		08E04AFE26DF1F2100461D4D /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		08E04B0126DF4B7300461D4D /* LocationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapView.swift; sourceTree = "<group>"; };
+		08E04B0426E07EB500461D4D /* PhotoLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 		0818A54E26DCCC4F00204F58 /* Trip Weather */ = {
 			isa = PBXGroup;
 			children = (
+				08E04B0326E07E9A00461D4D /* UIKit Controllers */,
 				08E04B0026DF2B4300461D4D /* ViewModels */,
 				08E04AFD26DF1C8700461D4D /* Views */,
 				08A6434D26DE185200404FFE /* Trip-Weather-Info.plist */,
@@ -116,6 +119,14 @@
 				08E04AFE26DF1F2100461D4D /* LocationService.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		08E04B0326E07E9A00461D4D /* UIKit Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				08E04B0426E07EB500461D4D /* PhotoLibrary.swift */,
+			);
+			path = "UIKit Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,6 +207,7 @@
 				08A6434F26DE509F00404FFE /* AddTripView.swift in Sources */,
 				0818A55926DCCC5100204F58 /* Persistence.swift in Sources */,
 				0818A56526DCD79A00204F58 /* TripsViewModel.swift in Sources */,
+				08E04B0526E07EB500461D4D /* PhotoLibrary.swift in Sources */,
 				0818A56926DD02F400204F58 /* TestData.swift in Sources */,
 				08A6435126DE6CD900404FFE /* LocationSelectionView.swift in Sources */,
 				08E04B0226DF4B7300461D4D /* LocationMapView.swift in Sources */,

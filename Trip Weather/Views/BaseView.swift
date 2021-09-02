@@ -22,7 +22,7 @@ struct BaseView: View {
                 Text("Trips")
             }
             NavigationView() {
-                EmptyView()
+                Text("Trip Weather (prototype name) alpha")
             }
             .tabItem {
                 Image (systemName: "gear")
@@ -30,11 +30,5 @@ struct BaseView: View {
             }
             
         }
-    }
-}
-
-struct BaseView_Previews: PreviewProvider {
-    static var previews: some View {
-        BaseView()
     }
 }

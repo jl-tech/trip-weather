@@ -21,8 +21,8 @@ struct LocationSelectionView: View {
                     NewEntryView(locationService: LocationService(), forDate: forDate)
                 }
                 Section(header: Text("Selected Locations"), footer: Text("Swipe a location to the left to delete it. Tap to view its map.")) {
-                    if viewModel.tripToAdd.locations.count == 0 {
-                        Text("No locations selected yet")
+                    if viewModel.locationsWithDate(forDate).count == 0 {
+                        Text("No locations selected")
                             .foregroundColor(.gray)
                     }
                     else {
@@ -52,7 +52,7 @@ struct LocationSelectionView: View {
     var dateSwitcher: some View {
         HStack {
             Button(action: {
-
+                forDate = Calendar.current.date(byAdding: .day, value: -1, to: forDate)!
             }) {
                 Image(systemName: "arrow.backward")
             }
@@ -60,7 +60,7 @@ struct LocationSelectionView: View {
             Text(toDateString(from: forDate))
                 .font(.title)
             Button(action: {
-                
+                forDate = Calendar.current.date(byAdding: .day, value: 1, to: forDate)!
             }) {
                 Image(systemName: "arrow.forward")
             }
