@@ -44,7 +44,6 @@ class TripsViewModel: ObservableObject {
         }
         return result
     }
-
     
     
     // MARK: Intents

@@ -12,7 +12,7 @@ struct AddTripView: View {
     @EnvironmentObject var viewModel: TripsViewModel
     @State private var photoSelectedOption: PhotoMode = .automatic
     @State private var photoSelectionStatus: PhotoSelectionStatus = .unselected
-    @State private var showPhotoSheet = false
+    
     var body: some View {
         NavigationView {
             Form {
@@ -32,6 +32,9 @@ struct AddTripView: View {
                         Text("Cancel")
                     }
                 }
+            }
+            .onAppear {
+                photoSelectionStatus =  (viewModel.tripToAdd.image == nil ? .unselected : .selected)
             }
         }
     }
@@ -81,8 +84,8 @@ struct AddTripView: View {
         }
     }
     
+    
     var photoSection: some View {
-
         Section (header: Text("Photo"), footer: Text("'Automatic photos from the web' will display top photos of locations as your trip progresses.")) {
             Picker(selection: $photoSelectedOption, label: EmptyView()) {
                 Text("Automatic photos from the web").tag(PhotoMode.automatic)
@@ -90,38 +93,30 @@ struct AddTripView: View {
             }
             .pickerStyle(InlinePickerStyle())
             if photoSelectedOption == .selection {
-                Group {
-                    Button(action: {
-                        showPhotoSheet = true
-                    }) {
+                NavigationLink(destination: PhotoSelectionView(photoSelectionStatus: $photoSelectionStatus)) {
+                    VStack {
                         Text("Select photo")
                         HStack {
                             Image(systemName: photoSelectionStatus == .unselected ? "exclamationmark.circle" : "checkmark.circle")
-                        Text(photoSelectionStatus == .unselected ? "  No photo selected" : "  Photo selected")
-                            .font(.caption)
+                            Text(photoSelectionStatus == .unselected ? "No photo selected" : "Photo selected")
+                                .font(.caption)
                         }
-                            .foregroundColor(photoSelectionStatus == .unselected ? .red : .green)
+                        .foregroundColor(photoSelectionStatus == .unselected ? .red : .green)
                     }
+                    
                 }
-                .transition(.slide)
             }
         }
-        .sheet(isPresented: $showPhotoSheet) {
-            PhotoLibrary(handlePickedImage: handleImage)
-        }
-    }
-    
-    private func handleImage(_ image: UIImage?) {
+        
         
     }
     
-    private enum PhotoSelectionStatus {
+    enum PhotoSelectionStatus {
         case unselected
         case selected
-        
     }
     
-    private enum PhotoMode {
+    enum PhotoMode {
         case automatic
         case selection
     }
