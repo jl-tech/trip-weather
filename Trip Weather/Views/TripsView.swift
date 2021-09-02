@@ -11,13 +11,13 @@ import CoreData
 struct TripsView: View {
     @ObservedObject var viewModel: TripsViewModel = TripsViewModel()
     @State private var addTripOpen = false
-
+    
     
     
     var body: some View {
         ScrollView {
             LazyVStack {
-                ForEach(TestData.testTrips) { trip in
+                ForEach(viewModel.trips()) { trip in
                     TripCard(trip: trip)
                         .padding([.leading, .bottom, .trailing])
                 }
@@ -44,10 +44,17 @@ struct TripsView: View {
                 
             }) {
                 ZStack(alignment: .bottom) {
-                    Image("sample2")
-                        .resizable()
-                        .frame(height: 250)
-                        .aspectRatio(contentMode: .fit)
+                    if trip.image != nil {
+                        Image(uiImage: UIImage(data: trip.image!)!)
+                            .resizable()
+                            .frame(height: 250)
+                            .aspectRatio(contentMode: .fit)
+                    } else {
+                        Image("sample")
+                            .resizable()
+                            .frame(height: 250)
+                            .aspectRatio(contentMode: .fit)
+                    }
                     VStack() {
                         Text(trip.name)
                             .font(.title)
@@ -88,7 +95,6 @@ struct TripsView: View {
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-                        .shadow(radius: 5, y: 3)
                         .foregroundColor(.blue)
                     VStack {
                         Image(systemName: "plus.circle")

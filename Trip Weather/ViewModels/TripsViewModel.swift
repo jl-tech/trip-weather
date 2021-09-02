@@ -12,8 +12,8 @@ class TripsViewModel: ObservableObject {
     @Published var model: TripWeatherModel = TripWeatherModel()
     @Published var tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date(), endDate: Date(), timestampAdded: Date(), locations: [], image: nil, id: 0)
     
-    typealias Trip = TripWeatherModel.STrip
-    typealias Location = TripWeatherModel.SLocation
+    typealias Trip = TripWeatherModel.Trip
+    typealias Location = TripWeatherModel.Location
     
     // MARK: Add Trip
     func resetToAdd() {
@@ -45,6 +45,14 @@ class TripsViewModel: ObservableObject {
         return result
     }
     
+    func doCreateTrip() {
+        model.addTrip(tripToAdd)
+    }
+    
+    // MARK: Model data
+    func trips() -> [Trip] {
+        return model.trips
+    }
     
     // MARK: Intents
 }

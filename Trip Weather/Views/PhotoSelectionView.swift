@@ -41,16 +41,18 @@ struct PhotoSelectionView: View {
                     Text("Clear photo")
                         .foregroundColor(.red)
                 }
-                Image(uiImage: UIImage(data: viewModel.tripToAdd.image!)!)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius))
+                Section(header: Text("Selected Photo ")) {
+                    Image(uiImage: UIImage(data: viewModel.tripToAdd.image!)!)
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius))
+                }
 
             } else {
                 Text("No photo selected")
                     .foregroundColor(.gray)
             }
-        }.navigationBarTitle("Select photo")
+        }.navigationBarTitle("Select Photo")
             .sheet(isPresented: $showPhotoSheet) {
                 PhotoLibrary(handlePickedImage:  { image in
                     handleImage(image)
