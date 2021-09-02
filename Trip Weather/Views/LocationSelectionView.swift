@@ -105,12 +105,11 @@ struct NewEntryView: View {
             }
             
             ForEach(locationService.searchResults, id: \.self) { completionResult in
-                // This simply lists the results, use a button in case you'd like to perform an action
-                // or use a NavigationLink to move to the next view upon selection.
                 Button(action: {
                     let name = completionResult.title + ", " + completionResult.subtitle
                     locationService.getCoordinate(addressString: name) { coords, error in
                         print(coords)
+                        print(toDateString(from: forDate))
                         viewModel.addLocation(day: forDate, latitude: coords.latitude, longitude: coords.longitude, name: name)
                     }
                     locationService.queryFragment = ""

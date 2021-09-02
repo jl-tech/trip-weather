@@ -53,9 +53,31 @@ extension Date: Identifiable {
             date = newDate
         }
         
-        if fromDate != toDate {
-            dates.append(toDate)
-        }
         return dates
+    }
+    
+    static func isSameDay(_ date1: Date, _ date2: Date) -> Bool {
+        let diff = Calendar.current.dateComponents([.day], from: date1, to: date2)
+        if diff.day == 0 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    static func isSameDayOrBeforeDate(check: Date, against: Date) -> Bool {
+        if isSameDay(check, against) {
+            return true
+        }
+        if check < against {
+            return true
+        }
+        return false
+    }
+    
+    static func stripTime(from originalDate: Date) -> Date {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: originalDate)
+        let date = Calendar.current.date(from: components)
+        return date!
     }
 }

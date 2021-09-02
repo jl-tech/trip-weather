@@ -64,7 +64,7 @@ struct AddTripView: View {
         }
         .alert(isPresented: $showFormIncompletePrompt) {
             Alert(
-                title: Text("Couldn't create trip"),
+                title: Text("Field(s) incomplete"),
                 message: Text(formIncompleteReason),
                 dismissButton: .default(Text("OK")) {
                     formIncompleteReason = "The trip couldn't be created because"
@@ -87,23 +87,25 @@ struct AddTripView: View {
             willShowPrompt = true
         }
         
-        if currTrip.description.isEmpty {
-            formIncompleteReason += "\n- You haven't entered a Description"
-            willShowPrompt = true
-            
-        }
-        
-        if currTrip.endDate < currTrip.startDate {
+        if Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  {
             formIncompleteReason += "\n- Trip end date must be on or before start date"
             willShowPrompt = true
         }
         
+        var datesMissingLocs: [Date] = []
         for date in Date.dates(from: currTrip.startDate, to: currTrip.endDate) {
             if viewModel.nLocationsWithDate(date) == 0 {
-                formIncompleteReason += "\n- No location was entered for \(toDateString(from: date))"
-                willShowPrompt = true
+                datesMissingLocs.append(date)
             }
-            
+        }
+        
+        if datesMissingLocs.count == 1 {
+            formIncompleteReason += "\n- Missing location for \(toDateString(from: datesMissingLocs[0]))"
+            willShowPrompt = true
+        }
+        else if datesMissingLocs.count > 1{
+            formIncompleteReason += "\n- Missing locations for multiple dates"
+            willShowPrompt = true
         }
         
         if photoMode == .selection && currTrip.image == nil {
@@ -127,11 +129,20 @@ struct AddTripView: View {
     
     var basicsSection: some View {
         Group {
-            Section (header: Text("Name")) {
-                TextField("Name this trip!", text: $viewModel.tripToAdd.name)
+            Section (
+                header: Text("Name"),
+                footer:
+                    HStack {
+                        Image(systemName: viewModel.tripToAdd.name.isEmpty ? "exclamationmark.circle" : "checkmark.circle")
+                        Text(viewModel.tripToAdd.name.isEmpty ? "Name is required" : "Nice name!")
+                            .font(.caption)
+                    }.foregroundColor(viewModel.tripToAdd.name.isEmpty  ? .red : .green)
+            ) {
+                TextField("Name", text: $viewModel.tripToAdd.name)
+                
             }
             Section(header: Text("Description")) {
-                TextField("Give this trip a description", text: $viewModel.tripToAdd.description)
+                TextField("Description (optional)", text: $viewModel.tripToAdd.description)
             }
         }
     }
@@ -141,11 +152,12 @@ struct AddTripView: View {
             header: Text("Dates"),
             footer:
                 HStack {
-                    Image(systemName: viewModel.tripToAdd.endDate < viewModel.tripToAdd.startDate  ? "exclamationmark.circle" : "checkmark.circle")
-                        .foregroundColor(viewModel.tripToAdd.endDate < viewModel.tripToAdd.startDate  ? .red : .green)
-                    Text(viewModel.tripToAdd.endDate < viewModel.tripToAdd.startDate  ? "End date must be on or after start date" : "Dates look good")
+                    Image(systemName: Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate) ? "exclamationmark.circle" : "checkmark.circle")
+                        .foregroundColor(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? .red : .green)
+                        .frame(height: 1)
+                    Text(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? "End date must be after start date" : "Dates look good")
                         .font(.caption)
-                        .foregroundColor(viewModel.tripToAdd.endDate < viewModel.tripToAdd.startDate  ? .red : .green)
+                        .foregroundColor(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? .red : .green)
                     
                 }
         ){
@@ -161,8 +173,8 @@ struct AddTripView: View {
     
     var locationsSection: some View {
         Section (header: Text("Locations")) {
-            if viewModel.tripToAdd.endDate < viewModel.tripToAdd.startDate {
-                Text("Trip end date must be on or after start date")
+            if Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  {
+                Text("End date must be after start date")
                     .foregroundColor(Color.gray)
             } else {
                 List {
