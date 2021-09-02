@@ -11,8 +11,6 @@
 		0818A55226DCCC4F00204F58 /* TripsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A55126DCCC4F00204F58 /* TripsView.swift */; };
 		0818A55426DCCC5100204F58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0818A55326DCCC5100204F58 /* Assets.xcassets */; };
 		0818A55726DCCC5100204F58 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0818A55626DCCC5100204F58 /* Preview Assets.xcassets */; };
-		0818A55926DCCC5100204F58 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A55826DCCC5100204F58 /* Persistence.swift */; };
-		0818A55C26DCCC5100204F58 /* Trip_Weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0818A55A26DCCC5100204F58 /* Trip_Weather.xcdatamodeld */; };
 		0818A56326DCD78600204F58 /* TripWeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A56226DCD78600204F58 /* TripWeatherModel.swift */; };
 		0818A56526DCD79A00204F58 /* TripsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A56426DCD79A00204F58 /* TripsViewModel.swift */; };
 		0818A56726DCFE6C00204F58 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A56626DCFE6C00204F58 /* BaseView.swift */; };
@@ -32,8 +30,6 @@
 		0818A55126DCCC4F00204F58 /* TripsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsView.swift; sourceTree = "<group>"; };
 		0818A55326DCCC5100204F58 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0818A55626DCCC5100204F58 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		0818A55826DCCC5100204F58 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		0818A55B26DCCC5100204F58 /* Trip_Weather.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Trip_Weather.xcdatamodel; sourceTree = "<group>"; };
 		0818A56226DCD78600204F58 /* TripWeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripWeatherModel.swift; sourceTree = "<group>"; };
 		0818A56426DCD79A00204F58 /* TripsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsViewModel.swift; sourceTree = "<group>"; };
 		0818A56626DCFE6C00204F58 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
@@ -84,8 +80,6 @@
 				08A6434D26DE185200404FFE /* Trip-Weather-Info.plist */,
 				0818A54F26DCCC4F00204F58 /* TripWeatherApp.swift */,
 				0818A55326DCCC5100204F58 /* Assets.xcassets */,
-				0818A55826DCCC5100204F58 /* Persistence.swift */,
-				0818A55A26DCCC5100204F58 /* Trip_Weather.xcdatamodeld */,
 				0818A55526DCCC5100204F58 /* Preview Content */,
 				0818A56226DCD78600204F58 /* TripWeatherModel.swift */,
 				0818A56826DD02F400204F58 /* TestData.swift */,
@@ -209,7 +203,6 @@
 				0818A56326DCD78600204F58 /* TripWeatherModel.swift in Sources */,
 				08A6434F26DE509F00404FFE /* AddTripView.swift in Sources */,
 				084B8E5426E08F3A0028CD0C /* PhotoSelectionView.swift in Sources */,
-				0818A55926DCCC5100204F58 /* Persistence.swift in Sources */,
 				0818A56526DCD79A00204F58 /* TripsViewModel.swift in Sources */,
 				08E04B0526E07EB500461D4D /* PhotoLibrary.swift in Sources */,
 				0818A56926DD02F400204F58 /* TestData.swift in Sources */,
@@ -220,7 +213,6 @@
 				0818A56726DCFE6C00204F58 /* BaseView.swift in Sources */,
 				0818A55026DCCC4F00204F58 /* TripWeatherApp.swift in Sources */,
 				08E04AFF26DF1F2100461D4D /* LocationService.swift in Sources */,
-				0818A55C26DCCC5100204F58 /* Trip_Weather.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,19 +423,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		0818A55A26DCCC5100204F58 /* Trip_Weather.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				0818A55B26DCCC5100204F58 /* Trip_Weather.xcdatamodel */,
-			);
-			currentVersion = 0818A55B26DCCC5100204F58 /* Trip_Weather.xcdatamodel */;
-			path = Trip_Weather.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 0818A54426DCCC4F00204F58 /* Project object */;
 }

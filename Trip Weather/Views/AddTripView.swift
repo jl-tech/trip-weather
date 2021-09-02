@@ -54,7 +54,7 @@ struct AddTripView: View {
                     title: Text("Confirm reset"),
                     message: Text("Are you sure you want to reset this page? All entered data will be permanently lost!"),
                     primaryButton: .destructive(Text("Reset")) {
-                        viewModel.resetToAdd()
+                        reset()
                     },
                     secondaryButton: .cancel())
             }
@@ -117,13 +117,20 @@ struct AddTripView: View {
         if willShowPrompt {
             showFormIncompletePrompt = true
         } else {
+            if photoMode == .automatic {
+                viewModel.tripToAdd.image = nil
+            }
             viewModel.doCreateTrip()
             dismiss()
-            viewModel.resetToAdd()
+            reset()
         }
     }
     
-    
+    private func reset() {
+        photoSelectionStatus = .unselected
+        photoMode = .automatic
+        viewModel.resetToAdd()
+    }
     
     
     
@@ -135,8 +142,8 @@ struct AddTripView: View {
                     HStack {
                         Image(systemName: viewModel.tripToAdd.name.isEmpty ? "exclamationmark.circle" : "checkmark.circle")
                         Text(viewModel.tripToAdd.name.isEmpty ? "Name is required" : "Nice name!")
-                            .font(.caption)
                     }.foregroundColor(viewModel.tripToAdd.name.isEmpty  ? .red : .green)
+                    .font(.caption)
             ) {
                 TextField("Name", text: $viewModel.tripToAdd.name)
                 
@@ -153,13 +160,10 @@ struct AddTripView: View {
             footer:
                 HStack {
                     Image(systemName: Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate) ? "exclamationmark.circle" : "checkmark.circle")
-                        .foregroundColor(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? .red : .green)
-                        .frame(height: 1)
                     Text(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? "End date must be after start date" : "Dates look good")
-                        .font(.caption)
-                        .foregroundColor(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? .red : .green)
                     
-                }
+                }.foregroundColor(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? .red : .green)
+                .font(.caption)
         ){
             DatePicker("Start date",
                            selection: $viewModel.tripToAdd.startDate,
@@ -202,9 +206,9 @@ struct AddTripView: View {
                         HStack {
                             Image(systemName: photoSelectionStatus == .unselected ? "exclamationmark.circle" : "checkmark.circle")
                             Text(photoSelectionStatus == .unselected ? "No photo selected" : "Photo selected")
-                                .font(.caption)
                         }
                         .foregroundColor(photoSelectionStatus == .unselected ? .red : .green)
+                        .font(.caption)
                     }
                     
                 }
@@ -238,22 +242,20 @@ struct AddTripView: View {
                             Image(systemName: "checkmark.circle")
                             if (viewModel.locationsWithDate(date).count == 1) {
                                 Text(viewModel.locationsWithDate(date)[0].name)
-                                    .font(.caption)
                             } else {
                                 Text("\(viewModel.locationsWithDate(date).count) locations")
-                                    .font(.caption)
                             }
                             
                         }
                         .foregroundColor(Color.green)
+                        .font(.caption)
                     } else {
                         HStack {
                             Image(systemName: "exclamationmark.circle")
                             Text("Location not added yet")
-                                .font(.caption)
-                            
                         }
                         .foregroundColor(Color.red)
+                        .font(.caption)
                     }
                     
                 }

@@ -130,9 +130,3 @@ struct DrawingConstants {
     static let cornerRadius: CGFloat = 20
     static let lineWidth: CGFloat = 3
 }
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        TripsView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
-}

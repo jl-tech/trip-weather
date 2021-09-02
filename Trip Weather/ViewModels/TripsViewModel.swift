@@ -17,7 +17,7 @@ class TripsViewModel: ObservableObject {
     
     // MARK: Add Trip
     func resetToAdd() {
-        tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date(), endDate: Date(), timestampAdded: Date(), locations: [], image: nil, id: 0)
+        tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil, id: 0)
     }
     
     func addLocation(day: Date, latitude: Double, longitude: Double, name: String) {

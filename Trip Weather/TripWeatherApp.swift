@@ -9,12 +9,9 @@ import SwiftUI
 
 @main
 struct Trip_WeatherApp: App {
-    let persistenceController = PersistenceController.shared
-
     var body: some Scene {
         WindowGroup {
             BaseView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
