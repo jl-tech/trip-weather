@@ -50,13 +50,16 @@ struct TripsView: View {
                     if trip.image != nil {
                         Image(uiImage: UIImage(data: trip.image!)!)
                             .resizable()
-                            .frame(height: 250)
-                            .aspectRatio(contentMode: .fit)
+                            .scaledToFill()
+                            .frame(width: UIScreen.main.bounds.size.width - 50, height: 250)
+                            .contentShape(shape)
                     } else {
                         Image("sample")
                             .resizable()
-                            .frame(height: 250)
-                            .aspectRatio(contentMode: .fit)
+                            .scaledToFill()
+                            .frame(width: UIScreen.main.bounds.size.width - 50, height: 250)
+                            .contentShape(shape)
+                            
                     }
                     VStack() {
                         Text(trip.name)
