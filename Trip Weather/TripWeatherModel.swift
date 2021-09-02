@@ -13,7 +13,7 @@ struct TripWeatherModel {
     @Environment(\.managedObjectContext) var context
     private (set) var trips: [Trip]
     
-    struct Trip: Identifiable {
+    struct Trip: Identifiable, Codable {
         var name: String
         var description: String
         var startDate: Date
@@ -25,7 +25,7 @@ struct TripWeatherModel {
         
     }
     
-    struct Location: Identifiable {
+    struct Location: Identifiable, Codable {
         var day: Date
         var latitude: Double
         var longitude: Double
@@ -34,8 +34,6 @@ struct TripWeatherModel {
     }
     
     init() {
-        // Load from disk
-        // TEMP
         trips = []
     }
     
@@ -43,9 +41,42 @@ struct TripWeatherModel {
         var tripToAdd = trip
         tripToAdd.id = trips.count
         trips.append(tripToAdd)
-        print(trips)
+        saveTrips()
     }
     
+    // MARK: Persistence
+    
+    func jsonifyTrips() throws -> Data {
+        return try JSONEncoder().encode(trips)
+    }
+    
+    func saveTrips() {
+        let manager = FileManager.default
+        if let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            do {
+                let data: Data = try jsonifyTrips()
+                try data.write(to: url.appendingPathComponent("trips.json"))
+            } catch let error {
+                print("ERROR!! \(String(describing: self)) - \(error)")
+            }
+        } else {
+            print("ERROR!! \(String(describing: self)) - URL returned nil!")
+        }
+    }
+    
+    mutating func loadTrips() {
+        let manager = FileManager.default
+        if let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            do {
+                let data = try Data(contentsOf: url.appendingPathComponent("trips.json"))
+                trips = try JSONDecoder().decode([Trip].self, from: data)
+            } catch let error {
+                print("ERROR!! \(String(describing: self)) - \(error)")
+            }
+        } else {
+            print("ERROR!! \(String(describing: self)) - URL returned nil!")
+        }
+    }
     
 }
  

@@ -34,6 +34,9 @@ struct TripsView: View {
             AddTripView()
                 .environmentObject(viewModel)
         }
+        .onAppear {
+            viewModel.loadTrips()
+        }
     }
     
     struct TripCard: View {

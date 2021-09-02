@@ -54,5 +54,10 @@ class TripsViewModel: ObservableObject {
         return model.trips
     }
     
+
+    
     // MARK: Intents
+    func loadTrips() {
+        model.loadTrips()
+    }
 }
