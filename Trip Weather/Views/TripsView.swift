@@ -118,11 +118,17 @@ struct TripsView: View {
                         addEditTripOpen = true
                     }) {
                         Image(systemName: "pencil")
+                        Text("Edit")
+                            .fontWeight(.bold)
+                            .font(.system(size: 12))
                     }
                     Button(action: {
                         showDeleteConfAlert = true
                     }) {
                         Image(systemName: "trash")
+                        Text("Delete")
+                            .fontWeight(.bold)
+                            .font(.system(size: 12))
                     }
                     .foregroundColor(.red)
                 }

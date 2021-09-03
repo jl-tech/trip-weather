@@ -31,6 +31,7 @@ struct TripWeatherModel {
         var longitude: Double
         var name: String
         var id = UUID()
+        var forecast: WeatherBitForecast?
     }
     
     init() {
@@ -89,5 +90,52 @@ struct TripWeatherModel {
         }
     }
     
+    // MARK: Weather
+    mutating func loadWeatherForTrip(id: UUID) {
+        
+    }
+    
+    private func getWeather(location: Location) {
+        
+    }
+    
+    struct WeatherBitForecast: Codable {
+        // Does not contain all fields available by WeatherBit API, only those neccessary
+        
+        // Wind
+        var wind_gust_spd: Double
+        var wind_spd: Double
+        var wind_dir: Int
+        var wind_cdir: String
+        
+        // Temp
+        var high_temp: Int
+        var low_temp: Int
+        var app_max_temp: Double // Feels like
+        var app_min_temp: Double
+        
+        // Precip
+        var snow: Int
+        var precip: Int
+        var pop: Int // Prob of precip
+        var rh: Int // Humidity
+        var clouds: Int
+        
+        // Conditions
+        var weather: WeatherBitConditions
+        var vis: Int
+        var uv: Int
+        
+        // SUn
+        var sunrise_ts: Date
+        var sunset_ts: Date
+        
+    }
+    
+    struct WeatherBitConditions: Codable {
+        var icon: String
+        var code: String
+        var descriptoin: String
+    }
 }
  
