@@ -9,13 +9,14 @@ import SwiftUI
 
 
 struct BaseView: View {
-    
+    @ObservedObject var viewModel: TripsViewModel = TripsViewModel()
     
     var body: some View {
         TabView {
             NavigationView() {
                 TripsView()
                     .navigationBarTitle("Trips")
+                    .environmentObject(viewModel)
             }
             .tabItem {
                 Image (systemName: "airplane")

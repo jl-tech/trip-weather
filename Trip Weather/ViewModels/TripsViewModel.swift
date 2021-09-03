@@ -60,4 +60,8 @@ class TripsViewModel: ObservableObject {
     func loadTrips() {
         model.loadTrips()
     }
+    
+    func removeTrip(_ trip: Trip) {
+        model.removeTrip(trip)
+    }
 }

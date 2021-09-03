@@ -37,10 +37,16 @@ struct TripWeatherModel {
         trips = []
     }
     
+    // MARK: Functions
     mutating func addTrip(_ trip: Trip) {
         var tripToAdd = trip
         tripToAdd.id = trips.count
         trips.append(tripToAdd)
+        saveTrips()
+    }
+    
+    mutating func removeTrip(_ trip: Trip) {
+        trips.removeAll(where: { $0.id == trip.id })
         saveTrips()
     }
     
