@@ -27,7 +27,7 @@ struct LocationSelectionView: View {
                     }
                     else {
                         List {
-                            ForEach(viewModel.tripToAdd.locations) { location in
+                            ForEach(viewModel.activeTrip.locations) { location in
                                 if (location.day == forDate) {
                                     NavigationLink(destination: LocationMapView(location: location)) {
                                         Text(location.name)
@@ -35,7 +35,7 @@ struct LocationSelectionView: View {
                                 }
                             }
                             .onDelete { offsets in
-                                viewModel.tripToAdd.locations.remove(atOffsets: offsets)
+                                viewModel.activeTrip.locations.remove(atOffsets: offsets)
                             }
     
                             
@@ -71,11 +71,11 @@ struct LocationSelectionView: View {
     }
     
     private var moreDatesBefore: Bool {
-        forDate > viewModel.tripToAdd.startDate
+        forDate > viewModel.activeTrip.startDate
     }
     
     private var moreDatesAfter: Bool {
-        forDate < viewModel.tripToAdd.endDate
+        forDate < viewModel.activeTrip.endDate
     }
     
 }

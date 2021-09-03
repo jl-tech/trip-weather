@@ -10,24 +10,33 @@ import SwiftUI
 
 class TripsViewModel: ObservableObject {
     @Published var model: TripWeatherModel = TripWeatherModel()
-    @Published var tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil, id: 0)
+    @Published var activeTrip = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil) // the trip being created or edited
     
     typealias Trip = TripWeatherModel.Trip
     typealias Location = TripWeatherModel.Location
     
-    // MARK: Add Trip
+    // MARK: Add/Edit Trip
+    
+    func setActiveTrip(id: UUID) {
+        activeTrip = model.trips.first(where: { $0.id == id })!
+    }
+    
+    func resetActiveTrip() {
+        activeTrip = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil) 
+    }
+    
     func resetToAdd() {
-        tripToAdd = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil, id: 0)
+        activeTrip = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil)
     }
     
     func addLocation(day: Date, latitude: Double, longitude: Double, name: String) {
-        let newLoc = Location(day: day, latitude: latitude, longitude: longitude, name: name, id: tripToAdd.locations.count)
-        tripToAdd.locations.append(newLoc)
+        let newLoc = Location(day: day, latitude: latitude, longitude: longitude, name: name)
+        activeTrip.locations.append(newLoc)
     }
     
     func nLocationsWithDate(_ date: Date) -> Int {
         var count: Int = 0
-        for item in tripToAdd.locations {
+        for item in activeTrip.locations {
             if item.day == date {
                 count += 1
             }
@@ -37,7 +46,7 @@ class TripsViewModel: ObservableObject {
     
     func locationsWithDate(_ date: Date) -> [Location] {
         var result: [Location] = []
-        for item in tripToAdd.locations {
+        for item in activeTrip.locations {
             if item.day == date {
                 result.append(item)
             }
@@ -46,7 +55,11 @@ class TripsViewModel: ObservableObject {
     }
     
     func doCreateTrip() {
-        model.addTrip(tripToAdd)
+        model.addTrip(activeTrip)
+    }
+    
+    func doEditTrip() {
+        model.editTrip(activeTrip)
     }
     
     // MARK: Model data

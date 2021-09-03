@@ -21,8 +21,7 @@ struct TestData {
         endDate: stringToDate("2021/11/30"),
         timestampAdded: Date(),
         locations: [],
-        image: nil,
-        id: 0)
+        image: nil)
     
     static var testTrip2 = TripWeatherModel.Trip(
         name: "Test Trip 2!", description: "Description",
@@ -30,8 +29,7 @@ struct TestData {
         endDate: stringToDate("2021/12/30"),
         timestampAdded: Date(),
         locations: [],
-        image: nil,
-        id: 1)
+        image: nil)
     
     static var testTrip3 = TripWeatherModel.Trip(
         name: "Test Trip 2 yes yes yes yes yes yes y", description: "Description",
@@ -39,8 +37,7 @@ struct TestData {
         endDate: stringToDate("2021/12/30"),
         timestampAdded: Date(),
         locations: [],
-        image: nil,
-        id: 2)
+        image: nil)
     static var testTrips = [testTrip, testTrip2, testTrip3]
     
 }

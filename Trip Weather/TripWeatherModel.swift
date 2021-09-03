@@ -21,7 +21,7 @@ struct TripWeatherModel {
         var timestampAdded: Date
         var locations: [Location]
         var image: Data?
-        var id: Int
+        var id = UUID()
         
     }
     
@@ -30,7 +30,7 @@ struct TripWeatherModel {
         var latitude: Double
         var longitude: Double
         var name: String
-        var id: Int
+        var id = UUID()
     }
     
     init() {
@@ -39,9 +39,14 @@ struct TripWeatherModel {
     
     // MARK: Functions
     mutating func addTrip(_ trip: Trip) {
-        var tripToAdd = trip
-        tripToAdd.id = trips.count
-        trips.append(tripToAdd)
+        trips.append(trip)
+        saveTrips()
+    }
+    
+    mutating func editTrip(_ trip: Trip) {
+        if let idx = trips.firstIndex(where: { $0.id == trip.id }) {
+            trips[idx] = trip
+        }
         saveTrips()
     }
     

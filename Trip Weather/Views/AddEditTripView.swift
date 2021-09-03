@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct AddTripView: View {
+struct AddEditTripView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var viewModel: TripsViewModel
     @State private var photoMode: PhotoMode = .automatic
     @State private var photoSelectionStatus: PhotoSelectionStatus = .unselected
     @State private var showConfirmResetPrompt = false
+    @Binding var editingExistingTrip: Bool
 
     var body: some View {
         NavigationView {
@@ -22,12 +23,12 @@ struct AddTripView: View {
                 locationsSection
                 photoSection
                 Button(action: {
-                    doCreateTrip()
+                    doCreateOrEdit()
                 }) {
                     Text("Create Trip")
                 }
             }
-            .navigationTitle("New Trip")
+            .navigationTitle(editingExistingTrip ? "Edit Trip": "New Trip")
             .frame(minWidth: 400, minHeight: 600)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -43,11 +44,12 @@ struct AddTripView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: { doCreateTrip() } ) {
-                        Text("Create")
+                    Button(action: { doCreateOrEdit() } ) {
+                        Text(editingExistingTrip ? "Edit" : "Create")
                             .fontWeight(.semibold)
                     }
                 }
+                    
             }
             .alert(isPresented: $showConfirmResetPrompt) {
                 Alert(
@@ -59,27 +61,33 @@ struct AddTripView: View {
                     secondaryButton: .cancel())
             }
             .onAppear {
-                photoSelectionStatus =  (viewModel.tripToAdd.image == nil ? .unselected : .selected)
+                onAppearTasks()
             }
         }
         .alert(isPresented: $showFormIncompletePrompt) {
             Alert(
                 title: Text("Field(s) incomplete"),
                 message: Text(formIncompleteReason),
-                dismissButton: .default(Text("OK")) {
-                    formIncompleteReason = "The trip couldn't be created because"
-                })
+                dismissButton: .default(Text("OK")))
         }
     }
     
+    func onAppearTasks() {
+        photoMode = (viewModel.activeTrip.image == nil ? .automatic : .selection)
+        photoSelectionStatus =  (viewModel.activeTrip.image == nil ? .unselected : .selected)
+            
+    }
     func dismiss() {
         presentationMode.wrappedValue.dismiss()
+        editingExistingTrip = false
+        viewModel.resetActiveTrip()
     }
     
     @State private var showFormIncompletePrompt = false
-    @State private var formIncompleteReason = "The trip couldn't be created because:"
-    func doCreateTrip() {
-        let currTrip = viewModel.tripToAdd
+    @State private var formIncompleteReason = ""
+    func doCreateOrEdit() {
+        formIncompleteReason = editingExistingTrip ? "The trip couldn't be edited because" : "The trip couldn't be created because"
+        let currTrip = viewModel.activeTrip
         var willShowPrompt = false
         
         if currTrip.name.isEmpty {
@@ -87,7 +95,7 @@ struct AddTripView: View {
             willShowPrompt = true
         }
         
-        if Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  {
+        if Date.isSameDayOrBeforeDate(check: viewModel.activeTrip.endDate, against: viewModel.activeTrip.startDate)  {
             formIncompleteReason += "\n- Trip end date must be on or before start date"
             willShowPrompt = true
         }
@@ -118,9 +126,13 @@ struct AddTripView: View {
             showFormIncompletePrompt = true
         } else {
             if photoMode == .automatic {
-                viewModel.tripToAdd.image = nil
+                viewModel.activeTrip.image = nil
             }
-            viewModel.doCreateTrip()
+            if editingExistingTrip {
+                viewModel.doEditTrip()
+            } else {
+                viewModel.doCreateTrip()
+            }
             dismiss()
             reset()
         }
@@ -140,16 +152,16 @@ struct AddTripView: View {
                 header: Text("Name"),
                 footer:
                     HStack {
-                        Image(systemName: viewModel.tripToAdd.name.isEmpty ? "exclamationmark.circle" : "checkmark.circle")
-                        Text(viewModel.tripToAdd.name.isEmpty ? "Name is required" : "Nice name!")
-                    }.foregroundColor(viewModel.tripToAdd.name.isEmpty  ? .red : .green)
+                        Image(systemName: viewModel.activeTrip.name.isEmpty ? "exclamationmark.circle" : "checkmark.circle")
+                        Text(viewModel.activeTrip.name.isEmpty ? "Name is required" : "Nice name!")
+                    }.foregroundColor(viewModel.activeTrip.name.isEmpty  ? .red : .green)
                     .font(.caption)
             ) {
-                TextField("Name", text: $viewModel.tripToAdd.name)
+                TextField("Name", text: $viewModel.activeTrip.name)
                 
             }
             Section(header: Text("Description")) {
-                TextField("Description (optional)", text: $viewModel.tripToAdd.description)
+                TextField("Description (optional)", text: $viewModel.activeTrip.description)
             }
         }
     }
@@ -159,17 +171,17 @@ struct AddTripView: View {
             header: Text("Dates"),
             footer:
                 HStack {
-                    Image(systemName: Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate) ? "exclamationmark.circle" : "checkmark.circle")
-                    Text(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? "End date must be after start date" : "Dates look good")
+                    Image(systemName: Date.isSameDayOrBeforeDate(check: viewModel.activeTrip.endDate, against: viewModel.activeTrip.startDate) ? "exclamationmark.circle" : "checkmark.circle")
+                    Text(Date.isSameDayOrBeforeDate(check: viewModel.activeTrip.endDate, against: viewModel.activeTrip.startDate)  ? "End date must be after start date" : "Dates look good")
                     
-                }.foregroundColor(Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  ? .red : .green)
+                }.foregroundColor(Date.isSameDayOrBeforeDate(check: viewModel.activeTrip.endDate, against: viewModel.activeTrip.startDate)  ? .red : .green)
                 .font(.caption)
         ){
             DatePicker("Start date",
-                           selection: $viewModel.tripToAdd.startDate,
+                           selection: $viewModel.activeTrip.startDate,
                            displayedComponents: [.date])
                 DatePicker("End date",
-                       selection: $viewModel.tripToAdd.endDate,
+                       selection: $viewModel.activeTrip.endDate,
                        displayedComponents: [.date])
         }
         
@@ -177,12 +189,12 @@ struct AddTripView: View {
     
     var locationsSection: some View {
         Section (header: Text("Locations")) {
-            if Date.isSameDayOrBeforeDate(check: viewModel.tripToAdd.endDate, against: viewModel.tripToAdd.startDate)  {
+            if Date.isSameDayOrBeforeDate(check: viewModel.activeTrip.endDate, against: viewModel.activeTrip.startDate)  {
                 Text("End date must be after start date")
                     .foregroundColor(Color.gray)
             } else {
                 List {
-                    ForEach(Date.dates(from: viewModel.tripToAdd.startDate, to: viewModel.tripToAdd.endDate)) { date in
+                    ForEach(Date.dates(from: viewModel.activeTrip.startDate, to: viewModel.activeTrip.endDate)) { date in
                         DateEntry(date: date)
                     }
                 }

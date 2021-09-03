@@ -10,19 +10,20 @@ import CoreData
 
 struct TripsView: View {
     @EnvironmentObject var viewModel: TripsViewModel
-    @State private var addTripOpen = false
+
     @State private var editMode = false
-    
+    @State private var addEditTripOpen = false
+    @State private var editingExistingTrip = false
     
     var body: some View {
         ScrollView {
             LazyVStack {
                 ForEach(viewModel.trips()) { trip in
-                    TripCard(trip: trip, editMode: $editMode)
+                    TripCard(trip: trip, editMode: $editMode, addEditTripOpen: $addEditTripOpen, editingExistingTrip: $editingExistingTrip)
                         .padding([.leading, .bottom, .trailing])
                         .frame(height: 250)
                 }
-                NewTripCard(addTripOpen: $addTripOpen)
+                NewTripCard(addTripOpen: $addEditTripOpen)
                     .padding([.leading, .bottom, .trailing])
             }
         }
@@ -34,20 +35,23 @@ struct TripsView: View {
                 newTripToolbarButton
             }
         }
-        .sheet(isPresented: $addTripOpen) {
-            AddTripView()
+        .sheet(isPresented: $addEditTripOpen) {
+            AddEditTripView(editingExistingTrip: $editingExistingTrip)
         }
         .onAppear {
             viewModel.loadTrips()
         }
     }
-    
     // MARK: Cards
     
     struct TripCard: View {
         let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
         var trip: TripsViewModel.Trip
+        
         @Binding var editMode: Bool
+        @Binding var addEditTripOpen: Bool
+        @Binding var editingExistingTrip: Bool
+        
         @State var showDeleteConfAlert = false
         @EnvironmentObject var viewModel: TripsViewModel
         
@@ -109,7 +113,9 @@ struct TripsView: View {
             if editMode {
                 HStack {
                     Button(action: {
-                        
+                        viewModel.setActiveTrip(id: trip.id)
+                        editingExistingTrip = true
+                        addEditTripOpen = true
                     }) {
                         Image(systemName: "pencil")
                     }
@@ -179,7 +185,7 @@ struct TripsView: View {
     
     var newTripToolbarButton: some View {
         Button() {
-            addTripOpen = true
+            addEditTripOpen = true
         } label: {
             Image(systemName: "plus")
         }

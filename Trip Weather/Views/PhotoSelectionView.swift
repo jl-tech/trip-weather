@@ -9,12 +9,12 @@ import SwiftUI
 
 struct PhotoSelectionView: View {
     @State private var showPhotoSheet = false
-    @Binding var photoSelectionStatus: AddTripView.PhotoSelectionStatus
+    @Binding var photoSelectionStatus: AddEditTripView.PhotoSelectionStatus
     @EnvironmentObject var viewModel: TripsViewModel
     
     private func handleImage(_ image: UIImage?) {
         if let image = image {
-            viewModel.tripToAdd.image = image.pngData()
+            viewModel.activeTrip.image = image.jpegData(compressionQuality: 1.0)
             showPhotoSheet = false
             photoSelectionStatus = .selected
         }
@@ -22,7 +22,7 @@ struct PhotoSelectionView: View {
     
     private func clearPhoto() {
         photoSelectionStatus = .unselected
-        viewModel.tripToAdd.image = nil
+        viewModel.activeTrip.image = nil
     }
 
     
@@ -42,7 +42,7 @@ struct PhotoSelectionView: View {
                         .foregroundColor(.red)
                 }
                 Section(header: Text("Selected Photo ")) {
-                    Image(uiImage: UIImage(data: viewModel.tripToAdd.image!)!)
+                    Image(uiImage: UIImage(data: viewModel.activeTrip.image!)!)
                         .resizable()
                         .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius))
