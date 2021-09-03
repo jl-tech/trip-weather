@@ -23,7 +23,6 @@
 		08E04AFF26DF1F2100461D4D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04AFE26DF1F2100461D4D /* LocationService.swift */; };
 		08E04B0226DF4B7300461D4D /* LocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04B0126DF4B7300461D4D /* LocationMapView.swift */; };
 		08E04B0526E07EB500461D4D /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04B0426E07EB500461D4D /* PhotoLibrary.swift */; };
-		08EF212226E2500700E6445F /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EF212126E2500700E6445F /* Key.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,7 +44,6 @@
 		08E04AFE26DF1F2100461D4D /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		08E04B0126DF4B7300461D4D /* LocationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapView.swift; sourceTree = "<group>"; };
 		08E04B0426E07EB500461D4D /* PhotoLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
-		08EF212126E2500700E6445F /* Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +86,6 @@
 				0818A56226DCD78600204F58 /* TripWeatherModel.swift */,
 				0818A56826DD02F400204F58 /* TestData.swift */,
 				0818A56A26DD08A700204F58 /* Helpers.swift */,
-				08EF212126E2500700E6445F /* Key.swift */,
 			);
 			path = "Trip Weather";
 			sourceTree = "<group>";
@@ -217,7 +214,6 @@
 				08E04B0226DF4B7300461D4D /* LocationMapView.swift in Sources */,
 				0818A56B26DD08A700204F58 /* Helpers.swift in Sources */,
 				0818A55226DCCC4F00204F58 /* TripsView.swift in Sources */,
-				08EF212226E2500700E6445F /* Key.swift in Sources */,
 				0818A56726DCFE6C00204F58 /* BaseView.swift in Sources */,
 				0818A55026DCCC4F00204F58 /* TripWeatherApp.swift in Sources */,
 				08E04AFF26DF1F2100461D4D /* LocationService.swift in Sources */,
