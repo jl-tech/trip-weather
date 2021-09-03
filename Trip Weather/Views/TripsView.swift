@@ -20,6 +20,7 @@ struct TripsView: View {
                 ForEach(viewModel.trips()) { trip in
                     TripCard(trip: trip)
                         .padding([.leading, .bottom, .trailing])
+                        .frame(height: 250)
                 }
                 NewTripCard(addTripOpen: $addTripOpen)
                     .padding([.leading, .bottom, .trailing])
@@ -42,7 +43,9 @@ struct TripsView: View {
     struct TripCard: View {
         let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
         var trip: TripsViewModel.Trip
+        
         var body: some View {
+            GeometryReader { geometry in
             Button(action: {
                 
             }) {
@@ -51,13 +54,13 @@ struct TripsView: View {
                         Image(uiImage: UIImage(data: trip.image!)!)
                             .resizable()
                             .scaledToFill()
-                            .frame(width: UIScreen.main.bounds.size.width - 50, height: 250)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
                             .contentShape(shape)
                     } else {
                         Image("sample")
                             .resizable()
                             .scaledToFill()
-                            .frame(width: UIScreen.main.bounds.size.width - 50, height: 250)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
                             .contentShape(shape)
                             
                     }
@@ -66,8 +69,12 @@ struct TripsView: View {
                             .font(.title)
                             .fontWeight(.bold)
                             .padding(.top, 1.0)
-                        Text(" \(trip.startDate.relativeTime())")
-                            .font(.subheadline)
+                        if Date.isBetweenDates(check: Date(), startDate: trip.startDate, endDate: trip.endDate) {
+                            Text(" in progress")
+                        } else {
+                            Text(" \(trip.startDate.relativeTime())")
+                                .font(.subheadline)
+                        }
                         Text(" \(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
                             .font(.caption2)
                             .padding(.bottom, 1.0)
@@ -80,6 +87,7 @@ struct TripsView: View {
                 }
                 .clipShape(shape)
             }.buttonStyle(tapBounceButtonStyle())
+        }
         }
     }
     
