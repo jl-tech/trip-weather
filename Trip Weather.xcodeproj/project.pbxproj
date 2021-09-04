@@ -41,7 +41,7 @@
 		08A6434D26DE185200404FFE /* Trip-Weather-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Trip-Weather-Info.plist"; sourceTree = SOURCE_ROOT; };
 		08A6434E26DE509F00404FFE /* AddEditTripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditTripView.swift; sourceTree = "<group>"; };
 		08A6435026DE6CD900404FFE /* LocationSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSelectionView.swift; sourceTree = "<group>"; };
-		08D5405D26E1C0DC00807E61 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TripDetailView.swift; path = "Trip Weather/TripDetailView.swift"; sourceTree = SOURCE_ROOT; };
+		08D5405D26E1C0DC00807E61 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TripDetailView.swift; path = "Trip Weather/Views/TripDetailView.swift"; sourceTree = SOURCE_ROOT; };
 		08E04AFE26DF1F2100461D4D /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		08E04B0126DF4B7300461D4D /* LocationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapView.swift; sourceTree = "<group>"; };
 		08E04B0426E07EB500461D4D /* PhotoLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
