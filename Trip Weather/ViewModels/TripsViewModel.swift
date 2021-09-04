@@ -55,10 +55,12 @@ class TripsViewModel: ObservableObject {
     }
     
     func doCreateTrip() {
+        objectWillChange.send()
         model.addTrip(activeTrip)
     }
     
     func doEditTrip() {
+        objectWillChange.send()
         model.editTrip(activeTrip)
     }
     
@@ -71,10 +73,12 @@ class TripsViewModel: ObservableObject {
     
     // MARK: Intents
     func loadTrips() {
+        objectWillChange.send()
         model.loadTrips()
     }
     
     func removeTrip(_ trip: Trip) {
+        objectWillChange.send()
         model.removeTrip(trip)
     }
 }

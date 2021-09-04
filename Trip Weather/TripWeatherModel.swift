@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import SwiftUI
 
-struct TripWeatherModel {
+class TripWeatherModel {
     @Environment(\.managedObjectContext) var context
     private (set) var trips: [Trip]
     
@@ -39,19 +39,19 @@ struct TripWeatherModel {
     }
     
     // MARK: Functions
-    mutating func addTrip(_ trip: Trip) {
+    func addTrip(_ trip: Trip) {
         trips.append(trip)
         saveTrips()
     }
     
-    mutating func editTrip(_ trip: Trip) {
+    func editTrip(_ trip: Trip) {
         if let idx = trips.firstIndex(where: { $0.id == trip.id }) {
             trips[idx] = trip
         }
         saveTrips()
     }
     
-    mutating func removeTrip(_ trip: Trip) {
+    func removeTrip(_ trip: Trip) {
         trips.removeAll(where: { $0.id == trip.id })
         saveTrips()
     }
@@ -76,7 +76,7 @@ struct TripWeatherModel {
         }
     }
     
-    mutating func loadTrips() {
+    func loadTrips() {
         let manager = FileManager.default
         if let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first {
             do {
@@ -91,11 +91,11 @@ struct TripWeatherModel {
     }
     
     // MARK: Weather
-    mutating func loadWeatherForTrip(id: UUID) {
+    func loadWeatherForTrip(id: UUID) {
         
     }
     
-    mutating func loadWeatherForLocation(location: Location, tripIdx: Int) {
+    func loadWeatherForLocation(location: Location, tripIdx: Int) {
         let dateString = toWeatherKitDateString(from: location.day)
         
         if let url = URL(string: "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)") {
@@ -106,11 +106,13 @@ struct TripWeatherModel {
                         let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
                         let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
                         let result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.async { [self] in
                             print(result)
-                            if let idx = trips[tripIdx].locations.firstIndex(where: { $0.id == location.id }) {
-                                var newLoc = trips[tripIdx].locations[idx]
+                            if let idx = self.trips[tripIdx].locations.firstIndex(where: { $0.id == location.id }) {
+                                var newLoc = self.trips[tripIdx].locations[idx]
                                 newLoc.forecast = result
+                                self.trips[tripIdx].locations[idx] = newLoc
+                               
                             } else {
                                 return
                             }

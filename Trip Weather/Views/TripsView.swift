@@ -40,7 +40,7 @@ struct TripsView: View {
         }
         .onAppear {
             viewModel.loadTrips()
-            viewModel.model.loadWeatherForLocation(location: viewModel.model.trips[0].locations[0], tripIdx: 0)
+            //viewModel.model.loadWeatherForLocation(location: viewModel.model.trips[0].locations[0], tripIdx: 0)
         }
     }
     // MARK: Cards
