@@ -15,6 +15,7 @@ class TripsViewModel: ObservableObject {
     typealias Trip = TripWeatherModel.Trip
     typealias Location = TripWeatherModel.Location
     
+
     // MARK: Add/Edit Trip
     
     func setActiveTrip(id: UUID) {
@@ -30,7 +31,7 @@ class TripsViewModel: ObservableObject {
     }
     
     func addLocation(day: Date, latitude: Double, longitude: Double, name: String) {
-        let newLoc = Location(day: day, latitude: latitude, longitude: longitude, name: name)
+        let newLoc = Location(day: day, latitude: latitude, longitude: longitude, name: name, weatherLoadStatus: .idle)
         activeTrip.locations.append(newLoc)
     }
     

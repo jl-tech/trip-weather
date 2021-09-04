@@ -22,7 +22,6 @@ class TripWeatherModel {
         var locations: [Location]
         var image: Data?
         var id = UUID()
-        
     }
     
     struct Location: Identifiable, Codable {
@@ -32,6 +31,7 @@ class TripWeatherModel {
         var name: String
         var id = UUID()
         var forecast: WeatherBitForecast?
+        var weatherLoadStatus: WeatherLoadStatus
     }
     
     init() {
@@ -55,6 +55,9 @@ class TripWeatherModel {
         trips.removeAll(where: { $0.id == trip.id })
         saveTrips()
     }
+    
+
+    
     
     // MARK: Persistence
     
@@ -91,13 +94,24 @@ class TripWeatherModel {
     }
     
     // MARK: Weather
+    func setLocationForecast(tripID: UUID, locationID: UUID, forecast: WeatherBitForecast?, status: WeatherLoadStatus) {
+        if let tripIdx = trips.firstIndex(where: { $0.id == tripID }) {
+            if let locationIdx = trips[tripIdx].locations.firstIndex(where: { $0.id == locationID }) {
+                var newLoc = trips[tripIdx].locations[locationIdx]
+                newLoc.weatherLoadStatus = status
+                newLoc.forecast = forecast
+                trips[tripIdx].locations[locationIdx] = newLoc
+            }
+        }
+    }
+    
     func loadWeatherForTrip(id: UUID) {
         
     }
     
-    func loadWeatherForLocation(location: Location, tripIdx: Int) {
+    func loadWeatherForLocation(location: Location, tripId: UUID) {
         let dateString = toWeatherKitDateString(from: location.day)
-        
+
         if let url = URL(string: "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)") {
             let request = URLRequest(url: url)
             URLSession.shared.dataTask(with: request) { data, response, error in
@@ -108,19 +122,11 @@ class TripWeatherModel {
                         let result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
                         DispatchQueue.main.async { [self] in
                             print(result)
-                            if let idx = self.trips[tripIdx].locations.firstIndex(where: { $0.id == location.id }) {
-                                var newLoc = self.trips[tripIdx].locations[idx]
-                                newLoc.forecast = result
-                                self.trips[tripIdx].locations[idx] = newLoc
-                               
-                            } else {
-                                return
-                            }
-                            
+                            setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
                         }
-                        
                     } catch {
                         print(error)
+                        self.setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .error)
                     }
                     
                 }
@@ -176,6 +182,13 @@ class TripWeatherModel {
         var icon: String
         var code: Int
         var description: String
+    }
+    
+    enum WeatherLoadStatus: Codable {
+        case idle
+        case loading
+        case loaded
+        case error
     }
 }
 
