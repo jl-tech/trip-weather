@@ -57,7 +57,7 @@ struct LocationSelectionView: View {
                 Image(systemName: "arrow.backward")
             }
             .disabled(!moreDatesBefore)
-            Text(toDateString(from: forDate))
+            Text(toLongDateString(from: forDate))
                 .font(.title)
             Button(action: {
                 forDate = Calendar.current.date(byAdding: .day, value: 1, to: forDate)!
@@ -109,7 +109,7 @@ struct NewEntryView: View {
                     let name = completionResult.title + ", " + completionResult.subtitle
                     locationService.getCoordinate(addressString: name) { coords, error in
                         print(coords)
-                        print(toDateString(from: forDate))
+                        print(toLongDateString(from: forDate))
                         viewModel.addLocation(day: forDate, latitude: coords.latitude, longitude: coords.longitude, name: name)
                     }
                     locationService.queryFragment = ""

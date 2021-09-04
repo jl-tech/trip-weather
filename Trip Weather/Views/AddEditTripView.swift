@@ -108,7 +108,7 @@ struct AddEditTripView: View {
         }
         
         if datesMissingLocs.count == 1 {
-            formIncompleteReason += "\n- Missing location for \(toDateString(from: datesMissingLocs[0]))"
+            formIncompleteReason += "\n- Missing location for \(toLongDateString(from: datesMissingLocs[0]))"
             willShowPrompt = true
         }
         else if datesMissingLocs.count > 1{
@@ -248,7 +248,7 @@ struct AddEditTripView: View {
         var body: some View {
             NavigationLink(destination: LocationSelectionView(forDate: date)) {
                 VStack(alignment:.leading) {
-                    Text(toDateString(from:date))
+                    Text(toLongDateString(from:date))
                     if (viewModel.locationsWithDate(date).count > 0) {
                         HStack {
                             Image(systemName: "checkmark.circle")

@@ -95,12 +95,50 @@ struct TripWeatherModel {
         
     }
     
-    private func getWeather(location: Location) {
+    mutating func loadWeatherForLocation(location: Location, tripIdx: Int) {
+        let dateString = toWeatherKitDateString(from: location.day)
+        
+        if let url = URL(string: "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)") {
+            let request = URLRequest(url: url)
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let data = data {
+                    do {
+                        let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
+                        let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
+                        let result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
+                        DispatchQueue.main.async {
+                            print(result)
+                            if let idx = trips[tripIdx].locations.firstIndex(where: { $0.id == location.id }) {
+                                var newLoc = trips[tripIdx].locations[idx]
+                                newLoc.forecast = result
+                            } else {
+                                return
+                            }
+                            
+                        }
+                        
+                    } catch {
+                        print(error)
+                    }
+                    
+                }
+            }.resume()
+        } else {
+            print("ERROR!! \(String(describing: self)) - URL returned nil!")
+            return
+        }
+
         
     }
     
     struct WeatherBitForecast: Codable {
+        var data: [WeatherBitForecastDay]
+        var city_name: String
+    }
+    
+    struct WeatherBitForecastDay: Codable {
         // Does not contain all fields available by WeatherBit API, only those neccessary
+        var valid_date: String
         
         // Wind
         var wind_gust_spd: Double
@@ -109,22 +147,22 @@ struct TripWeatherModel {
         var wind_cdir: String
         
         // Temp
-        var high_temp: Int
-        var low_temp: Int
+        var high_temp: Double
+        var low_temp: Double
         var app_max_temp: Double // Feels like
         var app_min_temp: Double
         
         // Precip
-        var snow: Int
-        var precip: Int
-        var pop: Int // Prob of precip
-        var rh: Int // Humidity
-        var clouds: Int
+        var snow: Double
+        var precip: Double
+        var pop: Double // Prob of precip
+        var rh: Double // Humidity
+        var clouds: Double
         
         // Conditions
         var weather: WeatherBitConditions
-        var vis: Int
-        var uv: Int
+        var vis: Double
+        var uv: Double
         
         // SUn
         var sunrise_ts: Date
@@ -134,8 +172,8 @@ struct TripWeatherModel {
     
     struct WeatherBitConditions: Codable {
         var icon: String
-        var code: String
-        var descriptoin: String
+        var code: Int
+        var description: String
     }
 }
- 
+

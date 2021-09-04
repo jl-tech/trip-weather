@@ -8,19 +8,21 @@
 import Foundation
 import SwiftUI
 extension Date {
-    func relativeTime() -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        return formatter.localizedString(for: self, relativeTo: Date())
-    }
+
 }
 
 
-func toDateString(from date: Date) -> String {
+func toLongDateString(from date: Date) -> String {
     let formatter = DateFormatter()
     formatter.timeStyle = .none
     formatter.dateStyle = .medium
     formatter.timeZone = TimeZone.current
+    return formatter.string(from: date)
+}
+
+func toWeatherKitDateString(from date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
     return formatter.string(from: date)
 }
 
@@ -37,12 +39,19 @@ struct Blur: UIViewRepresentable {
     }
 }
 
-// from https://newbedev.com/all-dates-between-two-date-objects-swift
+
 extension Date: Identifiable {
     public var id: Date {
         self
     }
     
+    func relativeTime() -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: self, relativeTo: Date())
+    }
+    
+    // from https://newbedev.com/all-dates-between-two-date-objects-swift
     static func dates(from fromDate: Date, to toDate: Date) -> [Date] {
         var dates: [Date] = []
         var date = fromDate

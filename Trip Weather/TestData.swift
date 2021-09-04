@@ -38,6 +38,7 @@ struct TestData {
         timestampAdded: Date(),
         locations: [],
         image: nil)
+    
     static var testTrips = [testTrip, testTrip2, testTrip3]
     
 }

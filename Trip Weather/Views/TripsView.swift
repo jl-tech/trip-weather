@@ -40,6 +40,7 @@ struct TripsView: View {
         }
         .onAppear {
             viewModel.loadTrips()
+            viewModel.model.loadWeatherForLocation(location: viewModel.model.trips[0].locations[0], tripIdx: 0)
         }
     }
     // MARK: Cards
@@ -98,7 +99,7 @@ struct TripsView: View {
                     Text(" \(trip.startDate.relativeTime())")
                         .font(.subheadline)
                 }
-                Text(" \(toDateString(from:trip.startDate)) - \(toDateString(from:trip.endDate))")
+                Text(" \(toLongDateString(from:trip.startDate)) - \(toLongDateString(from:trip.endDate))")
                     .font(.caption2)
                     .padding(.bottom, 1.0)
             }
