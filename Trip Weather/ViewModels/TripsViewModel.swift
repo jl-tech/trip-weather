@@ -14,7 +14,7 @@ class TripsViewModel: ObservableObject {
     
     typealias Trip = TripWeatherModel.Trip
     typealias Location = TripWeatherModel.Location
-    
+
 
     // MARK: Add/Edit Trip
     
@@ -74,12 +74,68 @@ class TripsViewModel: ObservableObject {
     
     // MARK: Intents
     func loadTrips() {
-        objectWillChange.send()
         model.loadTrips()
     }
     
     func removeTrip(_ trip: Trip) {
-        objectWillChange.send()
         model.removeTrip(trip)
     }
+    
+    func loadWeatherForTrip(_ trip: Trip) {
+        loadWeatherForTrip(id: trip.id)
+    }
+    
+    // MARK: Loading Weather
+    typealias WeatherBitForecast = TripWeatherModel.WeatherBitForecast
+    typealias WeatherLoadStatus = TripWeatherModel.WeatherLoadStatus
+    func setLocationForecast(tripID: UUID, locationID: UUID, forecast: WeatherBitForecast?, status: WeatherLoadStatus) {
+        if let tripIdx = model.trips.firstIndex(where: { $0.id == tripID }) {
+            if let locationIdx = model.trips[tripIdx].locations.firstIndex(where: { $0.id == locationID }) {
+                var newLoc = model.trips[tripIdx].locations[locationIdx]
+                newLoc.weatherLoadStatus = status
+                newLoc.forecast = forecast
+                model.modifyLocation(tripIdx: tripIdx, locIdx: locationIdx, newLoc: newLoc)
+            }
+        }
+    }
+    
+    func loadWeatherForTrip(id: UUID) {
+        if let trip = model.trips.first(where: { $0.id == id }) {
+            for location in trip.locations {
+                loadWeatherForLocation(location: location, tripId: id)
+            }
+        }
+    }
+    
+    func loadWeatherForLocation(location: Location, tripId: UUID) {
+        let dateString = toWeatherKitDateString(from: location.day)
+        setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .loading)
+        if let url = URL(string: "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)") {
+            let request = URLRequest(url: url)
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let data = data {
+                    do {
+                        let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
+                        let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
+                        let result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
+                        DispatchQueue.main.async { [self] in
+                            print(result)
+                            setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
+                        }
+                    } catch {
+                        print(error)
+                        self.setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .error)
+                    }
+                    
+                }
+            }.resume()
+        } else {
+            print("ERROR!! \(String(describing: self)) - URL returned nil!")
+            return
+        }
+
+        
+    }
+    
 }
+

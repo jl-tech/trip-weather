@@ -9,14 +9,41 @@ import SwiftUI
 
 struct TripDetailView: View {
     @EnvironmentObject var viewModel: TripsViewModel
+    var trip: TripsViewModel.Trip
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            LazyVStack {
+                ForEach (trip.locations) { location in
+                    WeatherCard(location: location)
+                }
+            }.onAppear {
+                viewModel.loadWeatherForTrip(trip)
+            }
+        }
+    }
+    
+    
+    
+}
+
+struct WeatherCard: View {
+    let location: TripsViewModel.Location
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+                .foregroundColor(.white)
+            if location.weatherLoadStatus == .loading {
+                ProgressView()
+            }
+            else {
+                Text(String(describing: location.forecast))
+            }
+                
+        }
+        
     }
 }
 
-struct TripDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        TripDetailView()
-    }
-}
+

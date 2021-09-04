@@ -10,7 +10,7 @@ import CoreData
 
 struct TripsView: View {
     @EnvironmentObject var viewModel: TripsViewModel
-
+    
     @State private var editMode = false
     @State private var addEditTripOpen = false
     @State private var editingExistingTrip = false
@@ -55,13 +55,13 @@ struct TripsView: View {
         
         @State var showDeleteConfAlert = false
         @EnvironmentObject var viewModel: TripsViewModel
-        
+        @State private var action: Int? = 0
+
         var body: some View {
             VStack {
+                NavigationLink(destination: TripDetailView(trip: trip), tag: 1, selection: $action) { EmptyView() }
                 GeometryReader { geometry in
-                    Button(action: {
-                        
-                    }) {
+                    Button(action: { self.action = 1 }) {
                         ZStack(alignment: .bottom) {
                             if trip.image != nil {
                                 Image(uiImage: UIImage(data: trip.image!)!)
@@ -82,9 +82,10 @@ struct TripsView: View {
                         .clipShape(shape)
                     }.buttonStyle(tapBounceButtonStyle())
                 }
+                
                 controlsPart
             }
-
+            
         }
         
         var infoPart: some View {
@@ -177,7 +178,7 @@ struct TripsView: View {
         }
     }
     
-   
+    
     
     // MARK: Toolbar
     @ViewBuilder

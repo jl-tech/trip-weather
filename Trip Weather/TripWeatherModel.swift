@@ -9,8 +9,7 @@ import Foundation
 import CoreData
 import SwiftUI
 
-class TripWeatherModel {
-    @Environment(\.managedObjectContext) var context
+struct TripWeatherModel {
     private (set) var trips: [Trip]
     
     struct Trip: Identifiable, Codable {
@@ -39,24 +38,26 @@ class TripWeatherModel {
     }
     
     // MARK: Functions
-    func addTrip(_ trip: Trip) {
+    mutating func addTrip(_ trip: Trip) {
         trips.append(trip)
         saveTrips()
     }
     
-    func editTrip(_ trip: Trip) {
+    mutating func editTrip(_ trip: Trip) {
         if let idx = trips.firstIndex(where: { $0.id == trip.id }) {
             trips[idx] = trip
         }
         saveTrips()
     }
     
-    func removeTrip(_ trip: Trip) {
+    mutating func removeTrip(_ trip: Trip) {
         trips.removeAll(where: { $0.id == trip.id })
         saveTrips()
     }
     
-
+    mutating func modifyLocation(tripIdx: Int, locIdx: Int, newLoc: Location) {
+        trips[tripIdx].locations[locIdx] = newLoc
+    }
     
     
     // MARK: Persistence
@@ -79,7 +80,7 @@ class TripWeatherModel {
         }
     }
     
-    func loadTrips() {
+    mutating func loadTrips() {
         let manager = FileManager.default
         if let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first {
             do {
@@ -94,51 +95,7 @@ class TripWeatherModel {
     }
     
     // MARK: Weather
-    func setLocationForecast(tripID: UUID, locationID: UUID, forecast: WeatherBitForecast?, status: WeatherLoadStatus) {
-        if let tripIdx = trips.firstIndex(where: { $0.id == tripID }) {
-            if let locationIdx = trips[tripIdx].locations.firstIndex(where: { $0.id == locationID }) {
-                var newLoc = trips[tripIdx].locations[locationIdx]
-                newLoc.weatherLoadStatus = status
-                newLoc.forecast = forecast
-                trips[tripIdx].locations[locationIdx] = newLoc
-            }
-        }
-    }
-    
-    func loadWeatherForTrip(id: UUID) {
-        
-    }
-    
-    func loadWeatherForLocation(location: Location, tripId: UUID) {
-        let dateString = toWeatherKitDateString(from: location.day)
 
-        if let url = URL(string: "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)") {
-            let request = URLRequest(url: url)
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let data = data {
-                    do {
-                        let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
-                        let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
-                        let result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
-                        DispatchQueue.main.async { [self] in
-                            print(result)
-                            setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
-                        }
-                    } catch {
-                        print(error)
-                        self.setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .error)
-                    }
-                    
-                }
-            }.resume()
-        } else {
-            print("ERROR!! \(String(describing: self)) - URL returned nil!")
-            return
-        }
-
-        
-    }
-    
     struct WeatherBitForecast: Codable {
         var data: [WeatherBitForecastDay]
         var city_name: String
