@@ -146,6 +146,7 @@ struct TripWeatherModel {
         case loading
         case loaded
         case error
+        case unavailable
     }
 }
 

@@ -108,6 +108,15 @@ class TripsViewModel: ObservableObject {
     }
     
     func loadWeatherForLocation(location: Location, tripId: UUID) {
+        if location.day < Date.stripTime(from: Date()) {
+            // get historical weather TODO
+            setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .unavailable)
+            return
+        }
+        if location.day == Date.stripTime(from: Date()) {
+            // get current conditions TODO
+            
+        }
         let dateString = toWeatherKitDateString(from: location.day)
         setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .loading)
         if let url = URL(string: "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)") {

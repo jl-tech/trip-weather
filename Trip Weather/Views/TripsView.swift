@@ -94,6 +94,7 @@ struct TripsView: View {
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.top, 1.0)
+                    .lineLimit(1)
                 if Date.isBetweenDates(check: Date(), startDate: trip.startDate, endDate: trip.endDate) {
                     Text(" in progress")
                 } else {

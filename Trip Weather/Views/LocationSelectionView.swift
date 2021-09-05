@@ -106,7 +106,10 @@ struct NewEntryView: View {
             
             ForEach(locationService.searchResults, id: \.self) { completionResult in
                 Button(action: {
-                    let name = completionResult.title + ", " + completionResult.subtitle
+                    var name = completionResult.title + ", " + completionResult.subtitle
+                    if name.suffix(2) == ", " {
+                        name = String(name.dropLast().dropLast())
+                    }
                     locationService.getCoordinate(addressString: name) { coords, error in
                         print(coords)
                         print(toLongDateString(from: forDate))

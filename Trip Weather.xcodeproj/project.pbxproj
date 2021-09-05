@@ -23,6 +23,7 @@
 		08E04AFF26DF1F2100461D4D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04AFE26DF1F2100461D4D /* LocationService.swift */; };
 		08E04B0226DF4B7300461D4D /* LocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04B0126DF4B7300461D4D /* LocationMapView.swift */; };
 		08E04B0526E07EB500461D4D /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E04B0426E07EB500461D4D /* PhotoLibrary.swift */; };
+		08E7F53626E4D34F008094BF /* Collapsible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E7F53526E4D34F008094BF /* Collapsible.swift */; };
 		08EF212526E2519F00E6445F /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EF212426E2519F00E6445F /* Key.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		08E04AFE26DF1F2100461D4D /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		08E04B0126DF4B7300461D4D /* LocationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapView.swift; sourceTree = "<group>"; };
 		08E04B0426E07EB500461D4D /* PhotoLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
+		08E7F53526E4D34F008094BF /* Collapsible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collapsible.swift; sourceTree = "<group>"; };
 		08EF212426E2519F00E6445F /* Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,6 +113,7 @@
 				08A6434E26DE509F00404FFE /* AddEditTripView.swift */,
 				08E04B0126DF4B7300461D4D /* LocationMapView.swift */,
 				084B8E5326E08F3A0028CD0C /* PhotoSelectionView.swift */,
+				08E7F53526E4D34F008094BF /* Collapsible.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 				084B8E5426E08F3A0028CD0C /* PhotoSelectionView.swift in Sources */,
 				0818A56526DCD79A00204F58 /* TripsViewModel.swift in Sources */,
 				08E04B0526E07EB500461D4D /* PhotoLibrary.swift in Sources */,
+				08E7F53626E4D34F008094BF /* Collapsible.swift in Sources */,
 				0818A56926DD02F400204F58 /* TestData.swift in Sources */,
 				08A6435126DE6CD900404FFE /* LocationSelectionView.swift in Sources */,
 				08E04B0226DF4B7300461D4D /* LocationMapView.swift in Sources */,
