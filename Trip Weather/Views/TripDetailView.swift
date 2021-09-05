@@ -153,7 +153,7 @@ struct WeatherCard: View {
         }
         .foregroundColor(.white)
         .padding([.bottom, .trailing, .leading])
-        .frame(height: 300)
+        .frame(height: 325)
         
         
     }
@@ -191,7 +191,7 @@ struct WeatherCard: View {
     var rainBlock: some View {
         HStack {
             VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].pop))
+                Text(String(location.forecast!.data[0].pop.rounded()))
                     .font(.title2)
                 HStack {
                     Text("%")
@@ -200,7 +200,7 @@ struct WeatherCard: View {
                 }
             }
             VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].precip))
+                Text(String(location.forecast!.data[0].precip.rounded()))
                     .font(.title2)
                 HStack {
                     Text("MM")
@@ -215,7 +215,7 @@ struct WeatherCard: View {
     var sunBlock: some View {
         HStack {
             VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].uv))
+                Text(String(location.forecast!.data[0].uv.rounded()))
                     .font(.title2)
                 HStack {
                     Text("UV")
@@ -246,11 +246,10 @@ struct WeatherCard: View {
             .foregroundColor(.white)
         conditionsBlock
         tempsBlock
-            .padding(.top)
         rainBlock
-            .padding(.top)
+            .padding(.top, 1.0)
         sunBlock
-            .padding(.top)
+            .padding(.top, 1.0)
     }
     
     func getGradientForCondition(conditionCode: Int) -> LinearGradient {
@@ -258,24 +257,26 @@ struct WeatherCard: View {
         
         // Day: sunny condition, blue sky gradient
         if conditionCode >= 800, conditionCode <= 801 {
-            colors.append(Color(hex: "A9E7FC"))
+            colors.append(Color(hex: "7AB9FC"))
             colors.append(Color(hex: "2B6CFD"))
         }
         // Partly cloudy conditions, blue-gray
         else if conditionCode == 802 {
+            colors.append(Color(hex: "b0b0b0"))
             colors.append(Color(hex: "2B6CFD"))
-            colors.append(Color(hex: "d6d6d6"))
+
         }
         // Day: overcast conditions, light gray gradient
         else if conditionCode == 803 || conditionCode == 804 {
-            colors.append(Color(hex: "d6d6d6"))
-            colors.append(Color(hex: "a6a6a6"))
+            colors.append(Color(hex: "b0b0b0"))
+            colors.append(Color(hex: "9c9c9c"))
+
         }
-        
         // Otherwise: Rain/Snow  conditions, dark gray gradient
         else {
-            colors.append(Color(hex: "a6a6a6"))
             colors.append(Color(hex: "737373"))
+            colors.append(Color(hex: "4f4f4f"))
+
         }
         
         return LinearGradient(gradient: Gradient(colors: colors), startPoint: .bottom, endPoint: .top)

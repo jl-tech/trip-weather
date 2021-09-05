@@ -39,13 +39,18 @@ struct TripWeatherModel {
     
     // MARK: Functions
     mutating func addTrip(_ trip: Trip) {
-        trips.append(trip)
+        var newTrip = trip
+        newTrip.locations.sort(by: { $0.day < $1.day })
+        trips.append(newTrip)
         saveTrips()
     }
     
     mutating func editTrip(_ trip: Trip) {
         if let idx = trips.firstIndex(where: { $0.id == trip.id }) {
-            trips[idx] = trip
+            var newTrip = trip
+            newTrip.locations.sort(by: { $0.day < $1.day })
+            newTrip.locations = newTrip.locations.filter( { $0.day >= newTrip.startDate && $0.day <= newTrip.endDate } )
+            trips[idx] = newTrip
         }
         saveTrips()
     }

@@ -28,7 +28,7 @@ func toWeatherKitDateString(from date: Date) -> String {
 
 func toTimeString(from date: Date) -> String {
     let formatter = DateFormatter()
-    formatter.timeStyle = .medium
+    formatter.timeStyle = .short
     formatter.dateStyle = .none
     return formatter.string(from: date)
 }
