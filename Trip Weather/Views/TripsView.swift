@@ -59,6 +59,7 @@ struct TripsView: View {
     var sortSelector: some View {
         HStack {
             Text("Sort by:")
+                .font(.system(size: 15))
             Picker("Sort Order", selection: $currentSortMethod.onChange {_ in
                 UserDefaults.standard.set(currentSortMethod.rawValue, forKey: "tripSortMethod")
                 viewModel.sort(sortMethod: currentSortMethod)

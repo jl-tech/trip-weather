@@ -119,16 +119,24 @@ class TripsViewModel: ObservableObject {
         }
         let dateString = toWeatherKitDateString(from: location.day)
         setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .loading)
-        if let url = URL(string: "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)") {
+        var urlAddress = "https://api.weatherbit.io/v2.0/forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&key=\(APIKeys.weatherbitKey)"
+        if UserDefaults.standard.bool(forKey: "isUsingImperial") {
+            urlAddress += "&units=I"
+        }
+        if let url = URL(string: urlAddress ) {
             let request = URLRequest(url: url)
             URLSession.shared.dataTask(with: request) { data, response, error in
                 if let data = data {
                     do {
                         let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
                         let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
-                        let result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
+                        var result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
                         DispatchQueue.main.async { [self] in
-                            print(result)
+                            if !UserDefaults.standard.bool(forKey: "isUsingImperial") {
+                                //Converting from m/s to km/h
+                                result.data[0].wind_spd *= 3.6
+                                result.data[0].wind_gust_spd *= 3.6
+                            }
                             setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
                         }
                     } catch {

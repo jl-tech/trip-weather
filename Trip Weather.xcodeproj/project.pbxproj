@@ -16,6 +16,7 @@
 		0818A56726DCFE6C00204F58 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A56626DCFE6C00204F58 /* BaseView.swift */; };
 		0818A56926DD02F400204F58 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A56826DD02F400204F58 /* TestData.swift */; };
 		0818A56B26DD08A700204F58 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0818A56A26DD08A700204F58 /* Helpers.swift */; };
+		0847E8F026E6483500AA9BFB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0847E8EF26E6483500AA9BFB /* SettingsView.swift */; };
 		084B8E5426E08F3A0028CD0C /* PhotoSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084B8E5326E08F3A0028CD0C /* PhotoSelectionView.swift */; };
 		08A6434F26DE509F00404FFE /* AddEditTripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A6434E26DE509F00404FFE /* AddEditTripView.swift */; };
 		08A6435126DE6CD900404FFE /* LocationSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A6435026DE6CD900404FFE /* LocationSelectionView.swift */; };
@@ -38,6 +39,7 @@
 		0818A56626DCFE6C00204F58 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		0818A56826DD02F400204F58 /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		0818A56A26DD08A700204F58 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		0847E8EF26E6483500AA9BFB /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		084B8E5326E08F3A0028CD0C /* PhotoSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectionView.swift; sourceTree = "<group>"; };
 		08A6434D26DE185200404FFE /* Trip-Weather-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Trip-Weather-Info.plist"; sourceTree = SOURCE_ROOT; };
 		08A6434E26DE509F00404FFE /* AddEditTripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditTripView.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 		08E04AFD26DF1C8700461D4D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0847E8EF26E6483500AA9BFB /* SettingsView.swift */,
 				08D5405D26E1C0DC00807E61 /* TripDetailView.swift */,
 				08A6435026DE6CD900404FFE /* LocationSelectionView.swift */,
 				0818A55126DCCC4F00204F58 /* TripsView.swift */,
@@ -214,6 +217,7 @@
 				08A6434F26DE509F00404FFE /* AddEditTripView.swift in Sources */,
 				084B8E5426E08F3A0028CD0C /* PhotoSelectionView.swift in Sources */,
 				0818A56526DCD79A00204F58 /* TripsViewModel.swift in Sources */,
+				0847E8F026E6483500AA9BFB /* SettingsView.swift in Sources */,
 				08E04B0526E07EB500461D4D /* PhotoLibrary.swift in Sources */,
 				08E7F53626E4D34F008094BF /* Collapsible.swift in Sources */,
 				0818A56926DD02F400204F58 /* TestData.swift in Sources */,

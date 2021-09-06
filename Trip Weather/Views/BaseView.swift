@@ -20,9 +20,7 @@ struct BaseView: View {
                 Image (systemName: "airplane")
                 Text("Trips")
             }
-            NavigationView() {
-                Text("Trip Weather (prototype name) alpha")
-            }
+            SettingsView()
             .tabItem {
                 Image (systemName: "gear")
                 Text("Settings")

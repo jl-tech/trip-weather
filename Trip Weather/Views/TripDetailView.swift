@@ -107,31 +107,28 @@ struct TripDetailView: View {
                 }
                 VStack() {
                     Spacer()
-                    HStack {
-                        Text(trip.name)
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .lineLimit(1)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Collapsible(label: { Text("Details") }) {
-                            ScrollView {
-                                VStack {
-                                    Text("Description")
-                                        .fontWeight(.bold)
-                                    Text(trip.description)
-                                    Text("Dates")
-                                        .fontWeight(.bold)
-                                        .padding(.top, 1.0)
-                                    Text(" \(toLongDateString(from:trip.startDate)) - \(toLongDateString(from:trip.endDate))")
-                                        .padding(.bottom, 1.0)
-                                    Text("Trip created")
-                                        .fontWeight(.bold)
-                                        .padding(.top, 1.0)
-                                    Text(toLongDateString(from:trip.timestampAdded) + " " + toTimeString(from: trip.timestampAdded))
-                                }
+                    Text(trip.name)
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Collapsible(label: { Text("Details") }) {
+                        ScrollView {
+                            VStack {
+                                Text("Description")
+                                    .fontWeight(.bold)
+                                Text(trip.description)
+                                Text("Dates")
+                                    .fontWeight(.bold)
+                                    .padding(.top, 1.0)
+                                Text(" \(toLongDateString(from:trip.startDate)) - \(toLongDateString(from:trip.endDate))")
+                                    .padding(.bottom, 1.0)
+                                Text("Trip created")
+                                    .fontWeight(.bold)
+                                    .padding(.top, 1.0)
+                                Text(toLongDateString(from:trip.timestampAdded) + " " + toTimeString(from: trip.timestampAdded))
                             }
                         }
-                        
                     }
                     
                 }
@@ -163,7 +160,7 @@ struct WeatherCard: View {
                         .font(.title2)
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    if location.weatherLoadStatus == .unavailable {
+                    if location.weatherLoadStatus == .unavailable || location.weatherLoadStatus == .error {
                         if location.day < Date.stripTime(from: Date()) {
                             historicalWeatherButton
                         } else {
@@ -236,7 +233,7 @@ struct WeatherCard: View {
                 .padding(.leading, -5)
             Text(String(format:"%g", location.forecast!.data[0].precip.rounded()))
                 .font(.title2)
-            Text("MM ")
+            Text(UserDefaults.standard.bool(forKey: "isUsingImperial") ? "IN " : "MM ")
                 .padding(.leading, -5)
         }
         .foregroundColor(.white)
@@ -279,7 +276,7 @@ struct WeatherCard: View {
             
             Text(String(format:"%g", location.forecast!.data[0].wind_spd.rounded()) + " / " + String(format:"%g", location.forecast!.data[0].wind_gust_spd.rounded()) + "G")
                 .font(.title2)
-            Text("KM/H ")
+            Text(UserDefaults.standard.bool(forKey: "isUsingImperial") ? "MPH " : "KM/H ")
                 .padding(.leading, -5)
             Text(String(location.forecast!.data[0].wind_cdir))
                 .font(.title2)

@@ -20,6 +20,7 @@ struct TripWeatherModel {
         var timestampAdded: Date
         var locations: [Location]
         var image: Data?
+        var weatherAvgs: WeatherAverages?
         var id = UUID()
     }
     
@@ -177,6 +178,15 @@ struct TripWeatherModel {
         case loaded
         case error
         case unavailable
+    }
+    
+    struct WeatherAverages: Codable {
+        var maxTemp: Double
+        var minTemp: Double
+        var rainProb: Double
+        var rainMM: Double
+        var windSpeed: Double
+        var daysOfRain: Int
     }
 }
 
