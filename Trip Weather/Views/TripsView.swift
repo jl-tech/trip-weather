@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct TripsView: View {
     @EnvironmentObject var viewModel: TripsViewModel
@@ -15,9 +14,12 @@ struct TripsView: View {
     @State private var addEditTripOpen = false
     @State private var editingExistingTrip = false
     
+    @State private var currentSortMethod = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "tripSortMethod")) ?? SortMethod.createdDsc
+    
     var body: some View {
         ScrollView {
             LazyVStack {
+                sortSelector
                 ForEach(viewModel.trips()) { trip in
                     TripCard(trip: trip, editMode: $editMode, addEditTripOpen: $addEditTripOpen, editingExistingTrip: $editingExistingTrip)
                         .padding([.leading, .bottom, .trailing])
@@ -40,16 +42,36 @@ struct TripsView: View {
         }
         .onAppear {
             viewModel.loadTrips()
-            //viewModel.model.loadWeatherForLocation(location: viewModel.model.trips[0].locations[0], tripIdx: 0)
         }
     }
     
+
+    
     // MARK: Sorting
-    enum sortMethod {
-        case created
+    enum SortMethod: Int {
+        case createdAsc
+        case createdDsc
         case startDateAsc
         case startDateDsc
         case name
+    }
+    
+    var sortSelector: some View {
+        HStack {
+            Text("Sort by:")
+            Picker("Sort Order", selection: $currentSortMethod.onChange {_ in
+                UserDefaults.standard.set(currentSortMethod.rawValue, forKey: "tripSortMethod")
+                viewModel.sort(sortMethod: currentSortMethod)
+            }) {
+                Text("Date added (oldest first)").tag(SortMethod.createdAsc)
+                Text("Date added (recent first)").tag(SortMethod.createdDsc)
+                Text("Start date (oldest first)").tag(SortMethod.startDateAsc)
+                Text("Start date (recent first)").tag(SortMethod.startDateDsc)
+                Text("Name (alphabetical)").tag(SortMethod.name)
+            }
+            .pickerStyle(.menu)
+        }
+        
     }
     
     // MARK: Cards
@@ -65,7 +87,7 @@ struct TripsView: View {
         @State var showDeleteConfAlert = false
         @EnvironmentObject var viewModel: TripsViewModel
         @State private var action: Int? = 0
-
+        
         var body: some View {
             VStack {
                 NavigationLink(destination: TripDetailView(trip: trip), tag: 1, selection: $action) { EmptyView() }
@@ -148,7 +170,7 @@ struct TripsView: View {
                 .alert(isPresented: $showDeleteConfAlert) {
                     Alert(
                         title: Text("Confirm delete"),
-                        message: Text("Are you sure you want to delete '\(trip.name)? All associated data will be permanently lost!"),
+                        message: Text("Are you sure you want to delete '\(trip.name)'? All associated data will be permanently lost!"),
                         primaryButton: .destructive(Text("Delete")) {
                             viewModel.removeTrip(trip)
                         },

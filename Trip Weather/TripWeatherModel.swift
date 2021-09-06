@@ -99,6 +99,31 @@ struct TripWeatherModel {
         }
     }
     
+    // MARK: Sorting
+    
+    mutating func sortTripsByCreation(asc: Bool) {
+        if asc {
+            trips.sort(by: { $0.timestampAdded < $1.timestampAdded })
+        } else {
+            trips.sort(by: { $0.timestampAdded > $1.timestampAdded })
+        }
+        saveTrips()
+    }
+    
+    mutating func sortTripsByStartDate(asc: Bool) {
+        if asc {
+            trips.sort(by: { $0.startDate < $1.startDate })
+        } else {
+            trips.sort(by: { $0.startDate > $1.startDate })
+        }
+        saveTrips()
+    }
+    
+    mutating func sortTripsByName() {
+        trips.sort(by: { $0.name < $1.name })
+        saveTrips()
+    }
+    
     // MARK: Weather
 
     struct WeatherBitForecast: Codable {

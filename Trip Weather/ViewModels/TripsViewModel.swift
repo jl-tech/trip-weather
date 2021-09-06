@@ -146,5 +146,21 @@ class TripsViewModel: ObservableObject {
         
     }
     
+    //MARK: Sorting
+    func sort(sortMethod: TripsView.SortMethod) {
+        switch(sortMethod) {
+        case .startDateAsc:
+            model.sortTripsByStartDate(asc: true)
+        case .startDateDsc:
+            model.sortTripsByStartDate(asc: false)
+        case .createdAsc:
+            model.sortTripsByCreation(asc: true)
+        case .createdDsc:
+            model.sortTripsByCreation(asc: false)
+        case .name:
+            model.sortTripsByName()
+        }
+    }
+    
 }
 
