@@ -134,7 +134,7 @@ struct TripWeatherModel {
         var vis: Double
         var uv: Double
         
-        // SUn
+        // Sun
         var sunrise_ts: Date
         var sunset_ts: Date
         

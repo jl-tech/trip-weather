@@ -15,34 +15,45 @@ struct TripDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
-                nameHeader
-                    .frame(height: 200)
-                
-                ForEach (trip.locations) { location in
-                    if locationIsOnNewDate(location) {
-                        Text(toLongDateString(from: location.day).uppercased())
-                            .fontWeight(.bold)
-                            .foregroundColor(.gray)
+            ScrollViewReader { value in
+                VStack {
+                    nameHeader
+                        .frame(height: 200)
+                    Button( action: {
+                        withAnimation {
+                            value.scrollTo(Date.stripTime(from: Date()), anchor: .top)
+                        }
+                    }) {
+                        Text("Scroll to today")
+                            .font(.title2)
+                            .padding(.bottom)
                     }
-                    WeatherCard(location: location)
+                    ForEach (trip.locations) { location in
+                        if locationIsOnNewDate(location) {
+                            Text(toLongDateString(from: location.day).uppercased())
+                                .fontWeight(.bold)
+                                .foregroundColor(.gray)
+                                .id(location.day)
+                        }
+                        WeatherCard(location: location)
+                    }
+                    
+                }.onAppear {
+                    viewModel.loadWeatherForTrip(trip)
                 }
-                
-            }.onAppear {
-                viewModel.loadWeatherForTrip(trip)
             }
         }
-            .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showEdit) {
-                AddEditTripView(editingExistingTrip: $editingExistingTrip)
-            }
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    editToolbarButton
-                }
-                
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showEdit) {
+            AddEditTripView(editingExistingTrip: $editingExistingTrip)
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                editToolbarButton
             }
             
+        }
+        
     }
     
     @ViewBuilder
@@ -55,6 +66,8 @@ struct TripDetailView: View {
             Text("Edit")
         }
     }
+    
+    
     
     private func locationIsOnNewDate(_ location: TripsViewModel.Location) -> Bool {
         if let idx = trip.locations.firstIndex(where: { $0.id == location.id }) {
@@ -96,20 +109,29 @@ struct TripDetailView: View {
                         .fontWeight(.bold)
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Collapsible(label: { Text(" Details") }) {
-                        VStack {
-                            Text("Description")
-                                .fontWeight(.bold)
-                            Text(trip.description)
-                            Text("Dates")
-                                .fontWeight(.bold)
-                                .padding(.top, 1.0)
-                            
-                            Text(Date.isBetweenDates(check: Date(), startDate: trip.startDate, endDate: trip.endDate) ? " in progress" : trip.startDate.relativeTime())
-                            Text(" \(toLongDateString(from:trip.startDate)) - \(toLongDateString(from:trip.endDate))")
-                                .padding(.bottom, 1.0)
+                    HStack {
+                        Text(Date.isBetweenDates(check: Date(), startDate: trip.startDate, endDate: trip.endDate) ? " in progress" : trip.startDate.relativeTime())
+                        Spacer()
+                        Collapsible(label: { Text("Details") }) {
+                            ScrollView {
+                                VStack {
+                                    Text("Description")
+                                        .fontWeight(.bold)
+                                    Text(trip.description)
+                                    Text("Dates")
+                                        .fontWeight(.bold)
+                                        .padding(.top, 1.0)
+                                    Text(" \(toLongDateString(from:trip.startDate)) - \(toLongDateString(from:trip.endDate))")
+                                        .padding(.bottom, 1.0)
+                                    Text("Trip created")
+                                        .fontWeight(.bold)
+                                        .padding(.top, 1.0)
+                                    Text(toLongDateString(from:trip.timestampAdded) + " " + toTimeString(from: trip.timestampAdded))
+                                }
+                            }
                         }
                     }
+                    
                 }
                 .padding([.leading, .trailing])
                 .shadow(radius: 5)
@@ -140,7 +162,19 @@ struct WeatherCard: View {
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     if location.weatherLoadStatus == .unavailable {
-                        Text("Weather unavailable")
+                        if location.day < Date.stripTime(from: Date()) {
+                            HStack {
+                                Text("Tap to view historical weather")
+                                    .fontWeight(.bold)
+                                Image(systemName: "chevron.right")
+                                    .onAppear {
+                                        background = LinearGradient(colors: [.gray, .gray], startPoint: .top, endPoint: .bottom)
+                                    }
+                            }
+                        } else {
+                            Text("Weather unavailable. Try again later.")
+                        }
+                        
                     } else if location.weatherLoadStatus == .loaded {
                         forecastInfo
                             .onAppear {
@@ -153,7 +187,7 @@ struct WeatherCard: View {
         }
         .foregroundColor(.white)
         .padding([.bottom, .trailing, .leading])
-        .frame(height: 325)
+        .frame(height: location.weatherLoadStatus != .unavailable ? 325 : 80)
         
         
     }
@@ -166,89 +200,115 @@ struct WeatherCard: View {
                 .frame(width: 50, height: 50)
             Text(String(location.forecast!.data[0].weather.description))
         }
-        
+        .padding([.top, .bottom], -5)
     }
     
     var tempsBlock: some View {
         HStack {
-            VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].high_temp))
-                    .font(.title2)
-                Text("HIGH")
-                    .fontWeight(.bold)
+            HStack {
+                Text(String(location.forecast!.data[0].high_temp) + "°")
+                    .font(.title)
+                Image(systemName: "arrow.up")
             }
-            VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].low_temp))
-                    .font(.title2)
-                Text("LOW")
-                    .fontWeight(.bold)
+            HStack {
+                Text(String(location.forecast!.data[0].low_temp) + "°")
+                    .font(.title)
+                Image(systemName: "arrow.down")
+                
             }
-            
         }
         .foregroundColor(.white)
     }
     
     var rainBlock: some View {
         HStack {
-            VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].pop.rounded()))
-                    .font(.title2)
-                HStack {
-                    Text("%")
-                        .fontWeight(.bold)
-                    Image(systemName: "drop.fill")
-                }
-            }
-            VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].precip.rounded()))
-                    .font(.title2)
-                HStack {
-                    Text("MM")
-                        .fontWeight(.bold)
-                    Image(systemName: "drop.fill")
-                }
-            }
+            Image(systemName: "cloud.rain.fill")
+            Text("RAIN:")
+                .fontWeight(.bold)
+            Text(String(format:"%g", location.forecast!.data[0].pop.rounded()))
+                .font(.title2)
+            Text("% ")
+                .padding(.leading, -5)
+            Text(String(format:"%g", location.forecast!.data[0].precip.rounded()))
+                .font(.title2)
+            Text("MM ")
+                .padding(.leading, -5)
         }
         .foregroundColor(.white)
     }
     
     var sunBlock: some View {
         HStack {
-            VStack (alignment: .center) {
-                Text(String(location.forecast!.data[0].uv.rounded()))
-                    .font(.title2)
-                HStack {
-                    Text("UV")
-                        .fontWeight(.bold)
-                }
-            }
-            VStack (alignment: .center) {
+            Image(systemName: "sun.max.fill")
+            Text("SUN:")
+                .fontWeight(.bold)
+            
+            Text(String(format:"%g", location.forecast!.data[0].uv.rounded()))
+                .font(.title2)
+            Text("UV ")
+                .padding(.leading, -5)
+            
+            HStack (alignment: .center) {
                 Text(String(toTimeString(from: location.forecast!.data[0].sunrise_ts)))
-                    .font(.title2)
-                HStack {
-                    Image(systemName: "sunrise.fill")
-                }
+                    .font(.title3)
+                Image(systemName: "sunrise.fill")
+                    .padding(.leading, -5)
+                
             }
-            VStack (alignment: .center) {
+            
+            HStack (alignment: .center) {
                 Text(String(toTimeString(from: location.forecast!.data[0].sunset_ts)))
-                    .font(.title2)
-                HStack {
-                    Image(systemName: "sunset.fill")
-                }
+                    .font(.title3)
+                Image(systemName: "sunset.fill")
+                    .padding(.leading, -5)
             }
+            
+        }
+    }
+    
+    var windBlock: some View {
+        HStack {
+            Image(systemName: "wind")
+            Text("WIND:")
+                .fontWeight(.bold)
+            
+            Text(String(format:"%g", location.forecast!.data[0].wind_spd.rounded()) + " / " + String(format:"%g", location.forecast!.data[0].wind_gust_spd.rounded()) + "G")
+                .font(.title2)
+            Text("KM/H ")
+                .padding(.leading, -5)
+            Text(String(location.forecast!.data[0].wind_cdir))
+                .font(.title2)
+            Text("DIR ")
+                .padding(.leading, -5)
+            
+        }
+    }
+    
+    var otherBlock: some View {
+        HStack {
+            Text(String(format:"%g", location.forecast!.data[0].vis.rounded()))
+                .font(.title2)
+            Text("KM VIS ")
+                .padding(.leading, -5)
+            Text(String(format:"%g", location.forecast!.data[0].rh.rounded()))
+                .font(.title2)
+            Text("% HUMIDITY ")
+                .padding(.leading, -5)
+            
         }
     }
     
     @ViewBuilder
     var forecastInfo: some View {
-        Text("FORECAST")
-            .fontWeight(.bold)
-            .foregroundColor(.white)
         conditionsBlock
         tempsBlock
+            .padding(.bottom, 0.5)
         rainBlock
-            .padding(.top, 1.0)
         sunBlock
+            .padding(.top, 1.0)
+        windBlock
+            .padding(.top, 1.0)
+        otherBlock
             .padding(.top, 1.0)
     }
     
@@ -264,19 +324,19 @@ struct WeatherCard: View {
         else if conditionCode == 802 {
             colors.append(Color(hex: "b0b0b0"))
             colors.append(Color(hex: "2B6CFD"))
-
+            
         }
         // Day: overcast conditions, light gray gradient
         else if conditionCode == 803 || conditionCode == 804 {
             colors.append(Color(hex: "b0b0b0"))
-            colors.append(Color(hex: "9c9c9c"))
-
+            colors.append(Color(hex: "808080"))
+            
         }
         // Otherwise: Rain/Snow  conditions, dark gray gradient
         else {
             colors.append(Color(hex: "737373"))
             colors.append(Color(hex: "4f4f4f"))
-
+            
         }
         
         return LinearGradient(gradient: Gradient(colors: colors), startPoint: .bottom, endPoint: .top)

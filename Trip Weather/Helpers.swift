@@ -28,8 +28,10 @@ func toWeatherKitDateString(from date: Date) -> String {
 
 func toTimeString(from date: Date) -> String {
     let formatter = DateFormatter()
-    formatter.timeStyle = .short
-    formatter.dateStyle = .none
+    formatter.setLocalizedDateFormatFromTemplate("HH:mm a")
+    formatter.amSymbol = ""
+    formatter.pmSymbol = ""
+    formatter.locale = Locale(identifier: "en_US")
     return formatter.string(from: date)
 }
 

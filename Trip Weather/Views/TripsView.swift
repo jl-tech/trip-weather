@@ -43,6 +43,15 @@ struct TripsView: View {
             //viewModel.model.loadWeatherForLocation(location: viewModel.model.trips[0].locations[0], tripIdx: 0)
         }
     }
+    
+    // MARK: Sorting
+    enum sortMethod {
+        case created
+        case startDateAsc
+        case startDateDsc
+        case name
+    }
+    
     // MARK: Cards
     
     struct TripCard: View {
@@ -207,3 +216,4 @@ struct DrawingConstants {
     static let cornerRadius: CGFloat = 20
     static let lineWidth: CGFloat = 3
 }
+
