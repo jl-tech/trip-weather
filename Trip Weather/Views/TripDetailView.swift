@@ -19,14 +19,17 @@ struct TripDetailView: View {
                 VStack {
                     nameHeader
                         .frame(height: 200)
-                    Button( action: {
-                        withAnimation {
-                            value.scrollTo(Date.stripTime(from: Date()), anchor: .top)
+                    if Date.isBetweenDates(check: Date.stripTime(from: Date()), startDate: trip.startDate, endDate: trip.endDate) {
+                        Button( action: {
+                            withAnimation {
+                                value.scrollTo(Date.stripTime(from: Date()), anchor: .top)
+                            }
+                        }) {
+                            Text("Scroll to today")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .padding(.bottom)
                         }
-                    }) {
-                        Text("Scroll to today")
-                            .font(.title2)
-                            .padding(.bottom)
                     }
                     ForEach (trip.locations) { location in
                         if locationIsOnNewDate(location) {
@@ -104,14 +107,12 @@ struct TripDetailView: View {
                 }
                 VStack() {
                     Spacer()
-                    Text(trip.name)
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                     HStack {
-                        Text(Date.isBetweenDates(check: Date(), startDate: trip.startDate, endDate: trip.endDate) ? " in progress" : trip.startDate.relativeTime())
-                        Spacer()
+                        Text(trip.name)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         Collapsible(label: { Text("Details") }) {
                             ScrollView {
                                 VStack {
@@ -130,6 +131,7 @@ struct TripDetailView: View {
                                 }
                             }
                         }
+                        
                     }
                     
                 }
@@ -163,14 +165,7 @@ struct WeatherCard: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     if location.weatherLoadStatus == .unavailable {
                         if location.day < Date.stripTime(from: Date()) {
-                            HStack {
-                                Text("Tap to view historical weather")
-                                    .fontWeight(.bold)
-                                Image(systemName: "chevron.right")
-                                    .onAppear {
-                                        background = LinearGradient(colors: [.gray, .gray], startPoint: .top, endPoint: .bottom)
-                                    }
-                            }
+                            historicalWeatherButton
                         } else {
                             Text("Weather unavailable. Try again later.")
                         }
@@ -192,7 +187,17 @@ struct WeatherCard: View {
         
     }
     
-    
+    var historicalWeatherButton: some View {
+        HStack {
+            Text("Tap to view historical weather")
+                .fontWeight(.bold)
+            Image(systemName: "chevron.right")
+                .onAppear {
+                    background = LinearGradient(colors: [.gray, .gray], startPoint: .top, endPoint: .bottom)
+                }
+        }
+        
+    }
     var conditionsBlock: some View {
         HStack {
             Image(location.forecast!.data[0].weather.icon)
@@ -303,12 +308,12 @@ struct WeatherCard: View {
         conditionsBlock
         tempsBlock
             .padding(.bottom, 0.5)
+        otherBlock
         rainBlock
-        sunBlock
             .padding(.top, 1.0)
         windBlock
             .padding(.top, 1.0)
-        otherBlock
+        sunBlock
             .padding(.top, 1.0)
     }
     
