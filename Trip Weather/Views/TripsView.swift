@@ -127,7 +127,7 @@ struct TripsView: View {
                     .fontWeight(.bold)
                     .padding(.top, 1.0)
                     .lineLimit(1)
-                if Date.isBetweenDates(check: Date(), startDate: trip.startDate, endDate: trip.endDate) {
+                if viewModel.tripIsInProgress(trip: trip) {
                     Text(" in progress")
                 } else {
                     Text(" \(trip.startDate.relativeTime())")

@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct TripDetailView: View {
     @EnvironmentObject var viewModel: TripsViewModel
     var trip: TripsViewModel.Trip
     @State var showEdit = false
     @State var editingExistingTrip = true
+    @State var showFirstLocationRequest = false
+    var locationManager = CLLocationManager()
     
     var body: some View {
         ScrollView {
@@ -19,7 +22,20 @@ struct TripDetailView: View {
                 VStack {
                     nameHeader
                         .frame(height: 200)
-                    if Date.isBetweenDates(check: Date.stripTime(from: Date()), startDate: trip.startDate, endDate: trip.endDate) {
+                    if viewModel.tripIsInProgress(trip: trip) {
+                        if locationManager.authorizationStatus == .authorizedWhenInUse {
+                            Text("Current Conditions")
+                                .font(.title)
+                                .fontWeight(.bold)
+                        } else {
+                            Text("Current conditions can't be displayed because you denied location permissions.")
+
+                        }
+                    }
+                    Text("Forecast")
+                        .font(.title)
+                        .fontWeight(.bold)
+                    if viewModel.tripIsInProgress(trip: trip) {
                         Button( action: {
                             withAnimation {
                                 value.scrollTo(Date.stripTime(from: Date()), anchor: .top)
@@ -40,9 +56,14 @@ struct TripDetailView: View {
                         }
                         WeatherCard(location: location)
                     }
+                        
                     
                 }.onAppear {
                     viewModel.loadWeatherForTrip(trip)
+                    handleLocationRequests()
+                }
+                .sheet(isPresented: $showFirstLocationRequest, onDismiss: handleLocationRequests) {
+                    FirstLocationRequestView()
                 }
             }
         }
@@ -57,6 +78,17 @@ struct TripDetailView: View {
             
         }
         
+    }
+    
+    private func handleLocationRequests() {
+        if (viewModel.tripIsInProgress(trip: trip)) {
+            if !UserDefaults.standard.bool(forKey: "firstLocationRequestDisplayed") {
+                showFirstLocationRequest = true
+            }
+            if UserDefaults.standard.bool(forKey: "firstLocationRequestApproved") {
+                locationManager.requestWhenInUseAuthorization()
+            }
+        }
     }
     
     @ViewBuilder

@@ -16,6 +16,10 @@ class TripsViewModel: ObservableObject {
     typealias Location = TripWeatherModel.Location
 
 
+    func tripIsInProgress(trip: Trip) -> Bool {
+        return Date.isBetweenDates(check: Date.stripTime(from: Date()), startDate: trip.startDate, endDate: trip.endDate)
+    }
+    
     // MARK: Add/Edit Trip
     
     func setActiveTrip(id: UUID) {

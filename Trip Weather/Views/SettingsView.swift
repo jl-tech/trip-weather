@@ -14,10 +14,21 @@ struct SettingsView: View {
         NavigationView {
             Form {
                 Section(header: Text("Units"), footer: Text("Use imperial units: Fahrenheit and IN and MPH.")) {
-                    Toggle("Use imperial units", isOn: $isUsingImperial)
+                    Toggle("Use Imperial Units", isOn: $isUsingImperial)
                         .onChange(of: isUsingImperial) { _ in
                             UserDefaults.standard.set(isUsingImperial, forKey: "isUsingImperial")
                         }
+                }
+                Section(header: Text("Data")) {
+                    Button(action: {
+                        if let bundleID = Bundle.main.bundleIdentifier {
+                            UserDefaults.standard.removePersistentDomain(forName: bundleID)
+                        }
+                    }) {
+                        Text("Reset User Settings")
+                            .foregroundColor(.red)
+                        
+                    }
                 }
                 Text("Trip Weather (prototype name) alpha")
                 
