@@ -3,8 +3,14 @@ iOS app which fetches Weather information about your upcoming trip (Historical w
 
 Built with SwiftUI and Swift
 
-Work in progress
+**Core functionality**
+Completed
 - [x] Trip List
 - [x] Add Trip 
-- [ ] View Trip
-- [ ] Trip Weather
+- [x] View Trip
+- [x] Trip Weather
+
+**Extra functionality**
+WIP
+- [ ] Historical weather
+- [ ] Live weather based on location (when trip in progress)
