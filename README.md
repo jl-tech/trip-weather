@@ -4,11 +4,16 @@ iOS app which fetches Weather information about your upcoming trip (Historical w
 Built with SwiftUI and Swift
 
 ## Screenshots
-![]()|  ![]()
+### Trip list
+![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/TripList.png) |  ![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/TripListEdit.jpeg)
 :-------------------------:|:-------------------------:
-![]()  |  ![]()
-![]()  |  ![]()
-
+### Creating a trip
+![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/NewTrip.png) |  ![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/SelectLocations.png)
+:-------------------------:|:-------------------------:
+### Viewing a trip's forecast
+![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/ForecastTop.jpeg) |  ![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/ForecastDetail.jpeg)
+:-------------------------:|:-------------------------:
+### Works great on iPad too
 
 ## Progress
 **Core functionality** completed
