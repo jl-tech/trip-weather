@@ -16,6 +16,11 @@ iOS app which fetches Weather information about your upcoming trip!
 ![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/ForecastTop.jpeg) |  ![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/ForecastDetail.jpeg)
 :-------------------------:|:-------------------------:
 ### Works great on iPad too
+![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/iPad.png)
+
+### ...and in the dark
+![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/DarkForecast.png) | ![](https://raw.githubusercontent.com/jl-tech/trip-weather/main/screenshots/DarkList.png)
+:-------------------------:|:-------------------------:
 
 ## Progress
 **Core functionality** completed
