@@ -1,7 +1,8 @@
-# trip-weather
-iOS app which fetches Weather information about your upcoming trip (Historical weather averages where forecast doesn't extend to a date). Could be expanded to a full trip planner.
+<img src=https://raw.githubusercontent.com/jl-tech/trip-weather/main/logo/logo_rounded.png width="100"/>
+# Trip Weather
+iOS app which fetches Weather information about your upcoming trip!
 
-Built with SwiftUI and Swift
+
 
 ## Screenshots
 ### Trip list
