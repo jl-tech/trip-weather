@@ -1,4 +1,5 @@
-<img src=https://raw.githubusercontent.com/jl-tech/trip-weather/main/logo/logo_rounded.png width="100"/>
+<img src="https://raw.githubusercontent.com/jl-tech/trip-weather/main/logo/logo_rounded.png" width="200"/>
+
 # Trip Weather
 iOS app which fetches Weather information about your upcoming trip!
 
