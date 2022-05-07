@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @State var isUsingImperial: Bool = UserDefaults.standard.bool(forKey: "isUsingImperial")
-    
+    @State var locationApproved: Bool = UserDefaults.standard.bool(forKey: "firstLocationRequestApproved")
     var body: some View {
         NavigationView {
             Form {
@@ -17,6 +17,14 @@ struct SettingsView: View {
                     Toggle("Use Imperial Units", isOn: $isUsingImperial)
                         .onChange(of: isUsingImperial) { _ in
                             UserDefaults.standard.set(isUsingImperial, forKey: "isUsingImperial")
+                        }
+                }
+                Section(header: Text("Features"),
+                        footer: Button(action: { }) { Text("Location permissions must also be granted in Settings" )
+                }) {
+                    Toggle("Use Location Services", isOn: $locationApproved)
+                        .onChange(of: locationApproved) { _ in
+                            UserDefaults.standard.set(locationApproved, forKey: "firstLocationRequestApproved")
                         }
                 }
                 Section(header: Text("Data")) {

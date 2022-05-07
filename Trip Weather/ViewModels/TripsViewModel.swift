@@ -14,8 +14,9 @@ class TripsViewModel: ObservableObject {
     
     typealias Trip = TripWeatherModel.Trip
     typealias Location = TripWeatherModel.Location
-
-
+    
+    let apiQueue = DispatchQueue(label: "apiQueue")
+    
     func tripIsInProgress(trip: Trip) -> Bool {
         return Date.isBetweenDates(check: Date.stripTime(from: Date()), startDate: trip.startDate, endDate: trip.endDate)
     }
@@ -27,7 +28,7 @@ class TripsViewModel: ObservableObject {
     }
     
     func resetActiveTrip() {
-        activeTrip = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil) 
+        activeTrip = TripsViewModel.Trip(name: "", description: "", startDate: Date.stripTime(from: Date()), endDate: Date.stripTime(from: Date()), timestampAdded: Date(), locations: [], image: nil)
     }
     
     func resetToAdd() {
@@ -74,7 +75,7 @@ class TripsViewModel: ObservableObject {
         return model.trips
     }
     
-
+    
     
     // MARK: Intents
     func loadTrips() {
@@ -105,13 +106,13 @@ class TripsViewModel: ObservableObject {
     
     func loadWeatherForTrip(id: UUID) {
         if let trip = model.trips.first(where: { $0.id == id }) {
-            for location in trip.locations {
-                loadWeatherForLocation(location: location, tripId: id)
+            for (idx, location) in trip.locations.enumerated() {
+                loadWeatherForLocation(location: location, tripId: id, idx: Double(idx))
             }
         }
     }
     
-    func loadWeatherForLocation(location: Location, tripId: UUID) {
+    func loadWeatherForLocation(location: Location, tripId: UUID, idx: Double) {
         if location.day < Date.stripTime(from: Date()) {
             // get historical weather TODO
             setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .unavailable)
@@ -127,34 +128,38 @@ class TripsViewModel: ObservableObject {
         if UserDefaults.standard.bool(forKey: "isUsingImperial") {
             urlAddress += "&units=I"
         }
-        if let url = URL(string: urlAddress ) {
-            let request = URLRequest(url: url)
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let data = data {
-                    do {
-                        let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
-                        let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
-                        var result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
-                        DispatchQueue.main.async { [self] in
+        
+        apiQueue.asyncAfter(deadline: .now() + idx * 1.25) {
+            if let url = URL(string: urlAddress) {
+                let request = URLRequest(url: url)
+                URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let data = data {
+                        do {
+                            let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
+                            let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
+                            var result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
                             if !UserDefaults.standard.bool(forKey: "isUsingImperial") {
                                 //Converting from m/s to km/h
                                 result.data[0].wind_spd *= 3.6
                                 result.data[0].wind_gust_spd *= 3.6
                             }
-                            setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
+                            DispatchQueue.main.async { [self] in
+                                setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
+                            }
+                        } catch {
+                            print(error)
+                            DispatchQueue.main.async { [self] in
+                                self.setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .error)
+                            }
                         }
-                    } catch {
-                        print(error)
-                        self.setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .error)
+                        
                     }
-                    
-                }
-            }.resume()
-        } else {
-            print("ERROR!! \(String(describing: self)) - URL returned nil!")
-            return
+                }.resume()
+            } else {
+                print("ERROR!! \(String(describing: self)) - URL returned nil!")
+                return
+            }
         }
-
         
     }
     
