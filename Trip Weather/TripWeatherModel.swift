@@ -31,7 +31,7 @@ struct TripWeatherModel {
         var name: String
         var id = UUID()
         var forecast: WeatherBitForecast?
-        var weatherLoadStatus: WeatherLoadStatus
+        var weatherLoadStatus: WeatherLoadStatus = .idle
     }
     
     init() {

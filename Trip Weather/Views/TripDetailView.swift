@@ -185,7 +185,7 @@ struct WeatherCard: View {
             RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
                 .fill(background)
             if location.weatherLoadStatus == .loading {
-                ProgressView()
+                ProgressView().padding(.top)
             }
             else {
                 VStack(alignment: .leading) {
@@ -353,7 +353,7 @@ struct WeatherCard: View {
         var colors: [Color] = []
         
         // Day: sunny condition, blue sky gradient
-        if conditionCode >= 800, conditionCode <= 801 {
+        if conditionCode == 800 || conditionCode == 801 {
             colors.append(Color(hex: "7AB9FC"))
             colors.append(Color(hex: "2B6CFD"))
         }
