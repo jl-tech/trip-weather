@@ -99,9 +99,9 @@ struct NewEntryView: View {
         }
         List {
             switch locationService.status {
-            case .noResults: AnyView(Text("No Results"))
-            case .error(let description):  AnyView(Text("Error: \(description)"))
-            default:  AnyView(EmptyView())
+                case .noResults: AnyView(Text("No Results"))
+                case .error(let description):  AnyView(Text("Error: \(description)"))
+                default:  AnyView(EmptyView())
             }
             
             ForEach(locationService.searchResults, id: \.self) { completionResult in

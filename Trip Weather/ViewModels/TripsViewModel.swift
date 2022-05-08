@@ -138,13 +138,21 @@ class TripsViewModel: ObservableObject {
                             let decodedResponse = try JSONDecoder().decode(WeatherBitForecast.self, from: data)
                             let resultData = decodedResponse.data.filter( { $0.valid_date == dateString })
                             var result = WeatherBitForecast(data: resultData, city_name: decodedResponse.city_name)
-                            if !UserDefaults.standard.bool(forKey: "isUsingImperial") {
-                                //Converting from m/s to km/h
-                                result.data[0].wind_spd *= 3.6
-                                result.data[0].wind_gust_spd *= 3.6
+                            if result.data.count == 0 {
+                                DispatchQueue.main.async { [self] in
+                                    self.setLocationForecast(tripID: tripId, locationID: location.id, forecast: nil, status: .dateTooFar)
+                                }
+                                
                             }
-                            DispatchQueue.main.async { [self] in
-                                setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
+                            else {
+                                if !UserDefaults.standard.bool(forKey: "isUsingImperial") {
+                                    //Converting from m/s to km/h
+                                    result.data[0].wind_spd *= 3.6
+                                    result.data[0].wind_gust_spd *= 3.6
+                                }
+                                DispatchQueue.main.async { [self] in
+                                    self.setLocationForecast(tripID: tripId, locationID: location.id, forecast: result, status: .loaded)
+                                }
                             }
                         } catch {
                             print(error)

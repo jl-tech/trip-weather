@@ -27,6 +27,7 @@ struct TripDetailView: View {
                             Text("Current Conditions")
                                 .font(.title)
                                 .fontWeight(.bold)
+                            Text("Current conditions feature coming soon.")
                         } else {
                             Text("Current conditions can't be displayed because you denied location permissions.")
 
@@ -198,6 +199,8 @@ struct WeatherCard: View {
                         } else {
                             Text("Weather unavailable. Try again later.")
                         }
+                    } else if location.weatherLoadStatus == .dateTooFar {
+                        Text("Date too far in the future. Try again 16 days before this date.")
                         
                     } else if location.weatherLoadStatus == .loaded {
                         forecastInfo

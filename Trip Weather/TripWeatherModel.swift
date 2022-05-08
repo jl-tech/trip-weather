@@ -177,6 +177,7 @@ struct TripWeatherModel {
         case loading
         case loaded
         case error
+        case dateTooFar
         case unavailable
     }
     
